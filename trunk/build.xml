@@ -7,7 +7,8 @@
         <echo message="compile     - Compiles classes" />
         <echo message="clean       - Remove all *.class and .jar" />
         <echo message="war         - Builds the WAR file to be deployed in a servlet container"/>
-        <echo message="war         - Builds Javadoc documentation"/>
+        <echo message="javadoc     - Builds Javadoc documentation"/>
+        <echo message="src-zip     - Creates a source release"/>
     </target>
 
     <property name="name" value="sztakipedia-parser" />
@@ -22,6 +23,7 @@
     <property name="src.dir" value="src/main/java" />
     <property name="javadoc.dir" value="${docs.dir}/javadoc" />
     <property name="jar.file" value="${name}-${version}.jar" />
+    <property name="src.zip.file" value="${name}-${version}-src.zip" />
     <property name="war.file" value="${name}-${version}.war" />
 
     <property name="main.class" value="hu.sztaki.sztakipediaparser.wiki.parser.Parser" />
@@ -40,6 +42,8 @@
         </fileset>
         <!--<pathelement location="." />-->
     </path>
+
+    <target name="all" depends="build,javadoc,src-zip"/>
 
     <target name="build" depends="clean,jar"/>
 
@@ -100,6 +104,7 @@
             author="true"
             version="true"
             use="true"
+            additionalparam="-notimestamp"
             windowtitle="${name.official}"
             doctitle="${name.official} ${version} API Documentation "
             bottom="${copyright.message}"
@@ -112,4 +117,13 @@
             </fileset>
         </javadoc>        
     </target>
+    
+    <target name="src-zip">
+        <mkdir dir="${dist.dir}"/>
+        <delete file="${dist.dir}/${src.zip.file}"/>
+        <zip destfile="${dist.dir}/${src.zip.file}"
+            basedir="${src.dir}"
+            includes="**/*.java,**/*.properties,**/LICENSE*,**/*.txt,**/*.xml"/>
+    </target>
+
 </project>
