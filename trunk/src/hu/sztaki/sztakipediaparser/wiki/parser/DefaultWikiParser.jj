@@ -1,31 +1,0 @@
- /**
- * JavaCC template file created by SF JavaCC plugin 1.5.17+ wizard for JavaCC 1.5.0+
- */options{  JDK_VERSION = "1.6";  static = false;}PARSER_BEGIN(DefaultWikiParser)package hu.sztaki.sztakipediaparser.wiki.parser;import hu.sztaki.sztakipediaparser.wiki.converter.IWikiConverter;import hu.sztaki.sztakipediaparser.wiki.tags.*;public class DefaultWikiParser implements IWikiParser{  private IWikiConverter c;  public String parse(IWikiConverter c) throws ParseException, TokenMgrError  {    this.c = c;    start();    StringBuilder b = new StringBuilder();    c.render(b);    return b.toString();  }}PARSER_END(DefaultWikiParser)void start() :{  Token url = null;  Token alias = null;}{  (    InternalLink(c)  | ExternalLink(c)  | (< H_WHITESPACE >)  | (< V_WHITESPACE >)  )*  < EOF >}// Parse internal links, e.g. [[Texas|Lone Star State]]void InternalLink(IWikiConverter c) :{  Token url = null;  Token alias = null;
-  boolean pipe = false;}{  < OBRACKET2 > url = < INT_URL >  (    < INT_PIPE >
-    {      pipe = true;
-    }    (alias = < INT_ALIAS >    )?  )?  (    < INT_ALIAS_CLOSE >  | < INT_CLOSE >  )
-
-  {
-    // Store raw wikitext
-    String wikitext = "[[" + url.image;
-    if(pipe)    {      wikitext += "|";
-    }
-    
-    if (alias != null)
-    {
-      wikitext += alias.image;
-    }
-    wikitext += "]]";
-    // Create anchor tag
-    if (alias != null)
-    {
-      c.addInternalLinkTag(url.image, alias.image, wikitext);
-    }
-    else
-    {
-      c.addInternalLinkTag(url.image, null, wikitext);
-    }
-  }}// Parse External Wikilinks, e.g. [http://www.sztaki.hu SZTAKI]
-void ExternalLink(IWikiConverter c) :{  Token url = null;  Token alias = null;}{  < OBRACKET > url = < EXT_URL > (< EXT_H_WHITESPACE > alias = < EXT_ALIAS >)?  (    < EXT_ALIAS_CLOSE >  | < EXT_CLOSE >  )  {    // Store raw wikitext
-    String wikitext = "[" + url.image;    if (alias != null)    {      wikitext += " " + alias.image;    }    wikitext += "]";    // Create anchor tag
-    if (alias != null)    {      c.addExternalLinkTag(url.image, alias.image, false, wikitext);    }    else    {      c.addExternalLinkTag(url.image, null, false, wikitext);    }  }}< DEFAULT >TOKEN :{  < OBRACKET : "[" > : IN_EXTERNAL_LINK| < OBRACKET2 : "[[" > : IN_INTERNAL_LINK| < H_WHITESPACE : ([ " ", "\t" ])+ >| < V_WHITESPACE : ([ "\n", "\r" ])+ >}< IN_EXTERNAL_LINK >TOKEN :{  < EXT_CLOSE : "]" > : DEFAULT| < EXT_URL : ([ "A"-"Z", "a"-"z", "0"-"9", ":", ".", "_", "\\", "/", "~", "%", "-", "+", "&", "#", "?", "!", "=", "(", ")", "@" ])+ >| < EXT_H_WHITESPACE : ([ " ", "\t" ])+ > : IN_EXTERNAL_LINK_ALIAS}< IN_EXTERNAL_LINK_ALIAS >TOKEN :{  < EXT_ALIAS : (~[ "]", "\n", "\r" ])+ >| < EXT_ALIAS_CLOSE : "]" > : DEFAULT}< IN_INTERNAL_LINK >TOKEN :{  < INT_CLOSE : "]]" > : DEFAULT| < INT_URL : (~[ "]", "\n", "\r", "|" ])+ >| < INT_PIPE : "|" > : IN_INTERNAL_LINK_ALIAS}< IN_INTERNAL_LINK_ALIAS >TOKEN :{  < INT_ALIAS_CLOSE : "]]" > : DEFAULT| < INT_ALIAS : (~[ "]", "\n", "\r" ])+ >}
