@@ -7,18 +7,31 @@
         <echo message="compile     - Compiles classes" />
         <echo message="clean       - Remove all *.class and .jar" />
         <echo message="war         - Builds the WAR file to be deployed in a servlet container"/>
+        <echo message="war         - Builds Javadoc documentation"/>
     </target>
 
     <property name="name" value="sztakipedia-parser" />
+    <property name="name.official" value="Sztakipedia parser" />
+    <property name="version" value="0.1b" />
+    
     <property name="lib.dir" value="lib" />
-    <property file="build.properties"/>
     <property name="dist.dir" value="target" />
+    <property name="docs.dir" value="docs" />
     <property name="build.dir" value="${dist.dir}/classes" />
     <property name="build.sysclasspath" value="last"/>
     <property name="src.dir" value="src/main/java" />
-    <property name="jar.file" value="${name}.jar" />
-    <property name="war.file" value="${name}.war" />
+    <property name="javadoc.dir" value="${docs.dir}/javadoc" />
+    <property name="jar.file" value="${name}-${version}.jar" />
+    <property name="war.file" value="${name}-${version}.war" />
+
     <property name="main.class" value="hu.sztaki.sztakipediaparser.wiki.parser.Parser" />
+
+    <property name="copyright.holder" value="MTA SZTAKI" />
+    <property name="copyright.year" value="2011" />
+    <property name="copyright.message" value="&lt;div class='copyright'>${name.official} ${version} API Documentation &amp;ndash; Copyright &amp;copy; ${copyright.year} ${copyright.holder}&lt;/div>"/>
+
+    <property file="build.properties"/>
+
 
     <path id="classpath">
         <pathelement path="." />
@@ -79,4 +92,24 @@
         </war>
     </target>
 
+    <target name="javadoc" description="o Create Javadocs for the demo">
+        <mkdir dir="${javadoc.dir}"/>
+        <javadoc
+            access="public"
+            destdir="${javadoc.dir}"
+            author="true"
+            version="true"
+            use="true"
+            windowtitle="${name.official}"
+            doctitle="${name.official} ${version} API Documentation "
+            bottom="${copyright.message}"
+            header="${copyright.message}"
+            footer="${copyright.message}"
+            >
+            <link href="http://java.sun.com/j2se/1.5.0/docs/api/"/>
+            <fileset dir="${src.dir}" defaultexcludes="yes">
+                <include name="**/*.java"/>
+            </fileset>
+        </javadoc>        
+    </target>
 </project>
