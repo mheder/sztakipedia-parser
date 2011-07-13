@@ -1,48 +1,56 @@
 <project name="Sztakipedia parser" default="help" basedir=".">
 
+    <!-- usage -->
     <target name="help">
         <echo message="Common build targets:" />
-        <echo message="jar         - Builds jar file" />
-        <echo message="build       - Same as clean+jar" />
-        <echo message="compile     - Compiles classes" />
-        <echo message="clean       - Remove all *.class and .jar" />
-        <echo message="war         - Builds the WAR file to be deployed in a servlet container"/>
-        <echo message="javadoc     - Builds Javadoc documentation"/>
-        <echo message="src-zip     - Creates a source release"/>
+        <echo message=" jar         - Builds .jar file" />
+        <echo message=" build       - Same as clean+jar" />
+        <echo message=" compile     - Compiles classes" />
+        <echo message=" clean       - Delete generated binary files" />
+        <echo message=" war         - Builds the WAR file to be deployed in a servlet container"/>
+        <echo message=" javadoc     - Builds Javadoc documentation"/>
+        <echo message=" src-zip     - Creates a source release"/>
     </target>
 
+    <!-- names -->
     <property name="name" value="sztakipedia-parser" />
     <property name="name.official" value="Sztakipedia parser" />
     <property name="version" value="0.1b" />
     
+    <!-- directories -->
     <property name="lib.dir" value="lib" />
     <property name="dist.dir" value="target" />
     <property name="docs.dir" value="docs" />
+    
     <property name="build.dir" value="${dist.dir}/classes" />
     <property name="build.sysclasspath" value="last"/>
     <property name="src.dir" value="src/main/java" />
     <property name="javadoc.dir" value="${docs.dir}/javadoc" />
+    
+    <!-- files -->
     <property name="jar.file" value="${name}-${version}.jar" />
     <property name="src.zip.file" value="${name}-${version}-src.zip" />
     <property name="war.file" value="${name}-${version}.war" />
 
+    <!-- main -->
     <property name="main.class" value="hu.sztaki.sztakipediaparser.wiki.parser.Parser" />
 
+    <!-- copyright -->
     <property name="copyright.holder" value="MTA SZTAKI" />
     <property name="copyright.year" value="2011" />
     <property name="copyright.message" value="&lt;div class='copyright'>${name.official} ${version} API Documentation &amp;ndash; Copyright &amp;copy; ${copyright.year} ${copyright.holder}&lt;/div>"/>
 
+    <!-- include -->
     <property file="build.properties"/>
 
-
+    <!-- path -->
     <path id="classpath">
-        <pathelement path="." />
         <fileset dir="${lib.dir}" casesensitive="true">
             <include name="*.jar" />
         </fileset>
-        <!--<pathelement location="." />-->
     </path>
 
+    <!-- targets -->
     <target name="all" depends="build,javadoc,src-zip"/>
 
     <target name="build" depends="clean,jar"/>
@@ -115,7 +123,7 @@
             <fileset dir="${src.dir}" defaultexcludes="yes">
                 <include name="**/*.java"/>
             </fileset>
-        </javadoc>        
+        </javadoc>
     </target>
     
     <target name="src-zip">
