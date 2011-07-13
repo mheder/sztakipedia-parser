@@ -1,0 +1,82 @@
+<project name="Sztakipedia parser" default="help" basedir=".">
+
+    <target name="help">
+        <echo message="Common build targets:" />
+        <echo message="jar         - Builds jar file" />
+        <echo message="build       - Same as clean+jar" />
+        <echo message="compile     - Compiles classes" />
+        <echo message="clean       - Remove all *.class and .jar" />
+        <echo message="war         - Builds the WAR file to be deployed in a servlet container"/>
+    </target>
+
+    <property name="name" value="sztakipedia-parser" />
+    <property name="lib.dir" value="lib" />
+    <property file="build.properties"/>
+    <property name="dist.dir" value="target" />
+    <property name="build.dir" value="${dist.dir}/classes" />
+    <property name="build.sysclasspath" value="last"/>
+    <property name="src.dir" value="src/main/java" />
+    <property name="jar.file" value="${name}.jar" />
+    <property name="war.file" value="${name}.war" />
+    <property name="main.class" value="hu.sztaki.sztakipediaparser.wiki.parser.Parser" />
+
+    <path id="classpath">
+        <pathelement path="." />
+        <fileset dir="${lib.dir}" casesensitive="true">
+            <include name="*.jar" />
+        </fileset>
+        <!--<pathelement location="." />-->
+    </path>
+
+    <target name="build" depends="clean,jar"/>
+
+    <target name="jar" depends="compile">
+        <tstamp>
+            <format property="TODAY" pattern="yyyy-MM-dd HH:mm:ss" />
+        </tstamp>
+        <mkdir dir="${dist.dir}"/>
+        <delete file="${dist.dir}/${jar.file}"/>
+        <delete file="MANIFEST.MF"/>
+        <jar jarfile="${dist.dir}/${jar.file}">
+            <fileset dir="${build.dir}"/>
+            <manifest>
+                <attribute name="Built-By" value="${user.name}"/>
+                <attribute name="Main-Class" value="${main.class}"/>
+                <attribute name="Built-Date" value="${TODAY}"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="compile">
+        <mkdir dir="${build.dir}"/>
+        <javac
+            srcdir="${src.dir}"
+            destdir="${build.dir}"
+            debug="true"/>
+        <copy todir="${build.dir}">
+            <fileset dir="${src.dir}">
+                <include name="**/*.xsl" />
+                <include name="**/*.gif" />
+                <include name="**/*.jpg" />
+                <include name="**/*.txt" />
+                <include name="**/*.xml" />
+                <include name="**/LICENSE*" />
+                <include name="**/*.properties" />
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="clean">
+        <delete dir="${dist.dir}"/>
+    </target>
+    
+    <target name="war" depends="jar">
+        <war destfile="${dist.dir}/${war.file}" webxml="conf/web.xml">
+            <lib dir="${dist.dir}">
+                <exclude name="jdbc1.jar"/>
+                <exclude name="${war.file}"/>
+            </lib>
+        </war>
+    </target>
+
+</project>
