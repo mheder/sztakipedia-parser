@@ -36,6 +36,7 @@ public class BodyTag extends AbstractTag {
 
 	// This is overridden to prevent the setting of parent node since the
 	// BodyTag is always a root node.
+	@SuppressWarnings("unused")
 	private BodyTag(AbstractTag parent) {
 	}
 
