@@ -38,7 +38,7 @@ public class HTMLVisitor implements TagVisitor {
 	private void visitChildren(Tag tag) {
 		if (tag.getChildren() != null)
 			for (Tag t : tag.getChildren())
-				visit(t);
+				t.accept(this);
 	} 
 	
 
@@ -54,6 +54,7 @@ public class HTMLVisitor implements TagVisitor {
 
 	public void visit(BoldTag tag) {
 		out.append("<b>");
+		visitChildren(tag);
 		out.append("</b>");
 	}
 
