@@ -23,6 +23,8 @@ package hu.sztaki.sztakipediaparser.wiki.tags;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * An abstract class, it is the parent class of all classes that represent a
@@ -32,7 +34,7 @@ import java.util.HashMap;
  *         href="http://sztaki.hu">MTA SZTAKI</a>
  * @since 2011
  */
-public abstract class AbstractTag {
+public abstract class AbstractTag implements Tag {
 	/**************/
 	/*** Fields ***/
 	/**************/
@@ -40,22 +42,22 @@ public abstract class AbstractTag {
 	/**
 	 * Children nodes.
 	 */
-	protected ArrayList<AbstractTag> children = new ArrayList<AbstractTag>();
+	protected List<Tag> children = new ArrayList<Tag>();
 
 	/**
 	 * Parent node.
 	 */
-	protected AbstractTag parent;
+	protected Tag parent;
 
 	/**
 	 * HTML attributes like width="250px".
 	 */
-	protected HashMap<String, String> attributes = new HashMap<String, String>();
+	protected Map<String, String> attributes = new HashMap<String, String>();
 
 	/**
 	 * List of css classes of the tag.
 	 */
-	protected ArrayList<String> classes = new ArrayList<String>();
+	protected List<String> classes = new ArrayList<String>();
 
 	/**
 	 * Store raw wikitext just in case.
@@ -87,7 +89,7 @@ public abstract class AbstractTag {
 	 * 
 	 * @param parent
 	 */
-	public AbstractTag(AbstractTag parent) {
+	public AbstractTag(Tag parent) {
 		this.parent = parent;
 	}
 
@@ -101,7 +103,7 @@ public abstract class AbstractTag {
 	 * @param c
 	 *            New child.
 	 */
-	public void addChild(AbstractTag c) {
+	public void addChild(Tag c) {
 		children.add(c);
 	}
 
@@ -112,7 +114,7 @@ public abstract class AbstractTag {
 	 *            Child tag.
 	 * @param index
 	 */
-	public void addChild(AbstractTag c, int index) {
+	public void addChild(Tag c, int index) {
 		children.add(index, c);
 	}
 
@@ -122,7 +124,7 @@ public abstract class AbstractTag {
 	 * @param c
 	 *            Child to remove.
 	 */
-	public void removeChild(AbstractTag c) {
+	public void removeChild(Tag c) {
 		children.remove(c);
 	}
 
@@ -133,7 +135,7 @@ public abstract class AbstractTag {
 	 *            Child tag.
 	 * @return Index or -1 if c is not found.
 	 */
-	public int getChildIndex(AbstractTag c) {
+	public int getChildIndex(Tag c) {
 		return children.indexOf(c);
 	}
 
@@ -167,7 +169,7 @@ public abstract class AbstractTag {
 	 * @param c
 	 *            ArrayList of class definitions.
 	 */
-	public void addClasses(ArrayList<String> c) {
+	public void addClasses(List<String> c) {
 		for (String ci : c) {
 			if (!classes.contains(ci)) {
 				classes.add(ci);
@@ -187,21 +189,21 @@ public abstract class AbstractTag {
 	 * 
 	 * @param b
 	 */
-	protected abstract void openTag(StringBuilder b);
+	public abstract void openTag(StringBuilder b);
 
 	/**
 	 * Render the closing part of the HTML tag, like </div>
 	 * 
 	 * @param b
 	 */
-	protected abstract void closeTag(StringBuilder b);
+	public abstract void closeTag(StringBuilder b);
 
 	/**
 	 * Render the HTML of the tag's attributes.
 	 * 
 	 * @param b
 	 */
-	protected void renderAttributes(StringBuilder b) {
+	public void renderAttributes(StringBuilder b) {
 		if (!attributes.isEmpty()) {
 			for (String name : attributes.keySet()) {
 				b.append(" " + name + "=\"" + attributes.get(name) + "\"");
@@ -214,7 +216,7 @@ public abstract class AbstractTag {
 	 * 
 	 * @param b
 	 */
-	protected void renderCssClasses(StringBuilder b) {
+	public void renderCssClasses(StringBuilder b) {
 		if (!classes.isEmpty()) {
 			b.append(" class=\"");
 			for (String name : classes) {
@@ -232,9 +234,11 @@ public abstract class AbstractTag {
 	 * Render all children nodes of this node.
 	 * 
 	 * @param b
+	 * @deprecated Move rendering code to separate class according to <em>Visitor</em> pattern
 	 */
-	protected void renderChildren(StringBuilder b) {
-		for (AbstractTag c : children) {
+	@Deprecated
+	public void renderChildren(StringBuilder b) {
+		for (Tag c : children) {
 			c.render(b);
 		}
 	}
@@ -243,7 +247,7 @@ public abstract class AbstractTag {
 	 * Adds an attribute that specifies the begin and end character positions of
 	 * the construct in the original wikitext.
 	 */
-	protected void addBeginEndAttr() {
+	public void addBeginEndAttr() {
 		if (begin != null) {
 			attributes.put("begin", String.valueOf(begin));
 		}
@@ -257,19 +261,19 @@ public abstract class AbstractTag {
 	/*** Getters and Setters ***/
 	/***************************/
 
-	public ArrayList<AbstractTag> getChildren() {
+	public List<Tag> getChildren() {
 		return children;
 	}
 
-	public AbstractTag getParent() {
+	public Tag getParent() {
 		return parent;
 	}
 
-	public HashMap<String, String> getAttributes() {
+	public Map<String, String> getAttributes() {
 		return attributes;
 	}
 
-	public ArrayList<String> getClasses() {
+	public List<String> getClasses() {
 		return classes;
 	}
 

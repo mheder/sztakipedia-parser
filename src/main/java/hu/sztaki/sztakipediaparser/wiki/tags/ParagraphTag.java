@@ -21,6 +21,8 @@
  */
 package hu.sztaki.sztakipediaparser.wiki.tags;
 
+import hu.sztaki.sztakipediaparser.wiki.visitor.TagVisitor;
+
 /**
  * Represents a paragraph tag in the AST.
  * 
@@ -34,7 +36,7 @@ public class ParagraphTag extends AbstractTag {
 		super();
 	}
 
-	public ParagraphTag(AbstractTag parent) {
+	public ParagraphTag(Tag parent) {
 		super(parent);
 	}
 
@@ -48,7 +50,7 @@ public class ParagraphTag extends AbstractTag {
 	}
 
 	@Override
-	protected void openTag(StringBuilder b) {
+	public void openTag(StringBuilder b) {
 		b.append("<p");
 
 		renderCssClasses(b);
@@ -58,8 +60,12 @@ public class ParagraphTag extends AbstractTag {
 	}
 
 	@Override
-	protected void closeTag(StringBuilder b) {
+	public void closeTag(StringBuilder b) {
 		b.append("</p>");
 	}
+	
+    public void accept(TagVisitor visitor) {
+        visitor.visit(this);
+    }	
 
 }

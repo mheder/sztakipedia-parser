@@ -21,6 +21,8 @@
  */
 package hu.sztaki.sztakipediaparser.wiki.tags;
 
+import hu.sztaki.sztakipediaparser.wiki.visitor.TagVisitor;
+
 /**
  * Represents an italic tag in the AST.
  * 
@@ -34,7 +36,7 @@ public class ItalicTag extends AbstractTag {
 		super();
 	}
 
-	public ItalicTag(AbstractTag parent) {
+	public ItalicTag(Tag parent) {
 		super(parent);
 	}
 
@@ -48,13 +50,17 @@ public class ItalicTag extends AbstractTag {
 	}
 
 	@Override
-	protected void openTag(StringBuilder b) {
+	public void openTag(StringBuilder b) {
 		b.append("<i>");
 	}
 
 	@Override
-	protected void closeTag(StringBuilder b) {
+	public void closeTag(StringBuilder b) {
 		b.append("</i>");
 	}
+	
+    public void accept(TagVisitor visitor) {
+        visitor.visit(this);
+    }	
 
 }

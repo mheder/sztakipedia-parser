@@ -21,6 +21,8 @@
  */
 package hu.sztaki.sztakipediaparser.wiki.tags;
 
+import hu.sztaki.sztakipediaparser.wiki.visitor.TagVisitor;
+
 /**
  * Represents an item of an unordered list in the AST.
  * 
@@ -34,7 +36,7 @@ public class UnorderedListItemTag extends AbstractTag {
 		super();
 	}
 
-	public UnorderedListItemTag(AbstractTag parent) {
+	public UnorderedListItemTag(Tag parent) {
 		super(parent);
 	}
 
@@ -46,7 +48,7 @@ public class UnorderedListItemTag extends AbstractTag {
 	}
 
 	@Override
-	protected void openTag(StringBuilder b) {
+	public void openTag(StringBuilder b) {
 		b.append("<li");
 		renderAttributes(b);
 		renderCssClasses(b);
@@ -54,8 +56,12 @@ public class UnorderedListItemTag extends AbstractTag {
 	}
 
 	@Override
-	protected void closeTag(StringBuilder b) {
+	public void closeTag(StringBuilder b) {
 		b.append("</li>");
 	}
+	
+    public void accept(TagVisitor visitor) {
+        visitor.visit(this);
+    }	
 
 }

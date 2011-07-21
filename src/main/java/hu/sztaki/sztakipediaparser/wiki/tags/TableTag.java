@@ -21,6 +21,8 @@
  */
 package hu.sztaki.sztakipediaparser.wiki.tags;
 
+import hu.sztaki.sztakipediaparser.wiki.visitor.TagVisitor;
+
 /**
  * Represents a table in the AST.
  * 
@@ -40,7 +42,7 @@ public class TableTag extends AbstractTag {
 		super(parent);
 	}
 
-	public TableTag(AbstractTag parent, String params) {
+	public TableTag(Tag parent, String params) {
 		super(parent);
 		this.params = params;
 	}
@@ -60,7 +62,7 @@ public class TableTag extends AbstractTag {
 	}
 
 	@Override
-	protected void openTag(StringBuilder b) {
+	public void openTag(StringBuilder b) {
 		b.append("<table");
 		renderCssClasses(b);
 		renderAttributes(b);
@@ -71,7 +73,7 @@ public class TableTag extends AbstractTag {
 	}
 
 	@Override
-	protected void closeTag(StringBuilder b) {
+	public void closeTag(StringBuilder b) {
 		b.append("</table>");
 	}
 
@@ -82,4 +84,9 @@ public class TableTag extends AbstractTag {
 	public void setCaption(TableCaptionTag caption) {
 		this.caption = caption;
 	}
+	
+    public void accept(TagVisitor visitor) {
+        visitor.visit(this);
+    }
+	
 }

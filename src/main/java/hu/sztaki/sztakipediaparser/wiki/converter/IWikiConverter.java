@@ -22,8 +22,9 @@
 package hu.sztaki.sztakipediaparser.wiki.converter;
 
 import hu.sztaki.sztakipediaparser.wiki.tags.AbstractTag;
+import hu.sztaki.sztakipediaparser.wiki.tags.Tag;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Interface for the wiki converter.
@@ -71,7 +72,7 @@ public interface IWikiConverter {
 	 * @param wikitext
 	 *            The raw wikitext.
 	 */
-	public void addInternalLinkTag(String url, ArrayList<String> params,
+	public void addInternalLinkTag(String url, List<String> params,
 			String wikitext);
 
 	/**
@@ -103,19 +104,19 @@ public interface IWikiConverter {
 	public void endItalicTag();
 
 	/**
-	 * Mark the start of a section heading, ie. ==Section Heading==
+	 * Mark the start of a section heading, ie. <code>==Section Heading==</code>
 	 * 
 	 * @param wikitext
 	 */
 	public void startSectionHeading(String wikitext);
 
 	/**
-	 * Mark the end of a section heading, ie. ==Section Heading==
+	 * Mark the end of a section heading, ie. <code>==Section Heading==</code>
 	 */
 	public void endSectionHeading();
 
 	/**
-	 * Mark the start of a subsection heading, ie. ===Subsection Heading===
+	 * Mark the start of a subsection heading, ie. <code>===Subsection Heading===</code>
 	 * 
 	 * @param wikitext
 	 */
@@ -248,25 +249,27 @@ public interface IWikiConverter {
 	/**
 	 * Adds a new cell to the table.
 	 * 
-	 * @param params
-	 *            Format modifiers.
 	 * @param content
 	 *            Content of the cell.
+	 * @param params
+	 *            Format modifiers.
 	 */
 	public void addTableCell(String content, String params);
 
 	/**
-	 * Handles <ref ...> ... </ref> tags in wikitext.
+	 * Handles <code>&lt;ref ...> ... &lt;/ref></code> tags in wikitext.
 	 * 
 	 * @param str
 	 */
 	public void addReferenceTag(String str);
 
 	/**
-	 * Render the HTML output to the supplied StringBuilder.
+	 * Render the conversion output to the supplied StringBuilder.
 	 * 
 	 * @param b
+	 * @deprecated TODO Move rendering code to separate class according to <em>Visitor</em> pattern
 	 */
+	@Deprecated
 	public void render(StringBuilder b);
 
 	/**
@@ -277,12 +280,12 @@ public interface IWikiConverter {
 	/**
 	 * Adds the supplied array of CSS classes to the specified class.
 	 * 
-	 * @param C
+	 * @param tagClass
 	 *            The class to apply the CSS classes to.
 	 * @param css
 	 *            An array of Strings describing the CSS classes.
 	 */
-	public void addCssClasses(Class<? extends AbstractTag> C, ArrayList<String> css);
+	public void addCssClasses(Class<? extends Tag> tagClass, List<String> css);
 
 	/**
 	 * Perform any preprocessing.
@@ -306,13 +309,13 @@ public interface IWikiConverter {
 	 * 
 	 * @param setBeginEnd
 	 */
-	public void setBeginEnd(boolean setBeginEnd);
+	public void setStoreBeginEnd(boolean storeBeginEnd);
 
 	/**
 	 * Returns the value of the setBeginEnd postprocessor switch.
 	 * 
 	 * @param setBeginEnd
 	 */
-	public boolean setBeginEnd();
+	public boolean getStoreBeginEnd();
 
 }

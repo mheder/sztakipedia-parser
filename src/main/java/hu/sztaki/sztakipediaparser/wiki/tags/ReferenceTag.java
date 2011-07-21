@@ -21,6 +21,8 @@
  */
 package hu.sztaki.sztakipediaparser.wiki.tags;
 
+import hu.sztaki.sztakipediaparser.wiki.visitor.TagVisitor;
+
 /**
  * Represents a citation in the AST.
  * 
@@ -35,16 +37,16 @@ public class ReferenceTag extends AbstractTag {
 		super();
 	}
 
-	public ReferenceTag(AbstractTag parent, int id) {
+	public ReferenceTag(Tag parent, int id) {
 		super(parent);
 	}
 
 	@Override
-	protected void closeTag(StringBuilder b) {
+	public void closeTag(StringBuilder b) {
 	}
 
 	@Override
-	protected void openTag(StringBuilder b) {
+	public void openTag(StringBuilder b) {
 	}
 
 	@Override
@@ -61,4 +63,9 @@ public class ReferenceTag extends AbstractTag {
 	public void setID(int id) {
 		this.id = id;
 	}
+	
+    public void accept(TagVisitor visitor) {
+        visitor.visit(this);
+    }	
+
 }

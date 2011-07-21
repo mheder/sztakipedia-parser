@@ -21,6 +21,8 @@
  */
 package hu.sztaki.sztakipediaparser.wiki.tags;
 
+import hu.sztaki.sztakipediaparser.wiki.visitor.TagVisitor;
+
 /**
  * Represents a section heading in the AST.
  * 
@@ -38,7 +40,7 @@ public class HeadingTag extends AbstractTag {
 		super();
 	}
 
-	public HeadingTag(AbstractTag parent) {
+	public HeadingTag(Tag parent) {
 		super(parent);
 	}
 
@@ -66,7 +68,7 @@ public class HeadingTag extends AbstractTag {
 	}
 
 	@Override
-	protected void openTag(StringBuilder b) {
+	public void openTag(StringBuilder b) {
 		b.append("<div");
 
 		renderCssClasses(b);
@@ -76,7 +78,7 @@ public class HeadingTag extends AbstractTag {
 	}
 
 	@Override
-	protected void closeTag(StringBuilder b) {
+	public void closeTag(StringBuilder b) {
 		b.append("</div>");
 	}
 
@@ -87,4 +89,9 @@ public class HeadingTag extends AbstractTag {
 	public void setLevel(int level) {
 		this.level = level;
 	}
+	
+    public void accept(TagVisitor visitor) {
+        visitor.visit(this);
+    }	
+
 }

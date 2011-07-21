@@ -21,6 +21,8 @@
  */
 package hu.sztaki.sztakipediaparser.wiki.tags;
 
+import hu.sztaki.sztakipediaparser.wiki.visitor.TagVisitor;
+
 /**
  * Represents indentation in the AST.
  * 
@@ -38,7 +40,7 @@ public class IndentTag extends AbstractTag {
 		super();
 	}
 
-	public IndentTag(AbstractTag parent) {
+	public IndentTag(Tag parent) {
 		super(parent);
 	}
 
@@ -48,7 +50,7 @@ public class IndentTag extends AbstractTag {
 	}
 
 	@Override
-	protected void openTag(StringBuilder b) {
+	public void openTag(StringBuilder b) {
 		b.append("\n<br/>");
 		switch (level) {
 		case 1:
@@ -75,7 +77,7 @@ public class IndentTag extends AbstractTag {
 	}
 
 	@Override
-	protected void closeTag(StringBuilder b) {
+	public void closeTag(StringBuilder b) {
 	}
 
 	public int getLevel() {
@@ -85,4 +87,9 @@ public class IndentTag extends AbstractTag {
 	public void setLeveL(int level) {
 		this.level = level;
 	}
+	
+    public void accept(TagVisitor visitor) {
+        visitor.visit(this);
+    }	
+
 }
