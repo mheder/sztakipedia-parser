@@ -8,6 +8,7 @@ import hu.sztaki.sztakipediaparser.wiki.converter.IWikiConverter;
 import hu.sztaki.sztakipediaparser.wiki.tags.*;
 
 /** Token Manager. */
+@SuppressWarnings("unused")
 public class JavaCCWikiParserTokenManager implements JavaCCWikiParserConstants
 {
 
