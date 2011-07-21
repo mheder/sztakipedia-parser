@@ -99,7 +99,7 @@ public class DefaultWikiConverter implements IWikiConverter {
 	/**
 	 * This hashmap defines an array of css classes for each tag.
 	 */
-	private HashMap<Class, String[]> cssClasses = new HashMap<Class, String[]>();
+	private HashMap<Class<? extends AbstractTag>, String[]> cssClasses = new HashMap<Class<? extends AbstractTag>, String[]>();
 
 	/**
 	 * Used to number unnamed external links.
@@ -457,7 +457,7 @@ public class DefaultWikiConverter implements IWikiConverter {
 					apiURL, mediaUrl);
 			c.setUrlCounter(urlCounter);
 			c.setTemplateID(templateID);
-			for (Class key : cssClasses.keySet()) {
+			for (Class<? extends AbstractTag> key : cssClasses.keySet()) {
 				String[] classes = cssClasses.get(key);
 				ArrayList<String> value = new ArrayList<String>(classes.length);
 				for (int i = 0; i < classes.length; i++) {
@@ -688,7 +688,7 @@ public class DefaultWikiConverter implements IWikiConverter {
 		tagStack.clear();
 	}
 
-	public void addCssClasses(Class C, ArrayList<String> css) {
+	public void addCssClasses(Class<? extends AbstractTag> C, ArrayList<String> css) {
 		if (css == null || C == null)
 			return;
 

@@ -21,6 +21,8 @@
  */
 package hu.sztaki.sztakipediaparser.wiki.converter;
 
+import hu.sztaki.sztakipediaparser.wiki.tags.AbstractTag;
+
 import java.util.ArrayList;
 
 /**
@@ -280,7 +282,7 @@ public interface IWikiConverter {
 	 * @param css
 	 *            An array of Strings describing the CSS classes.
 	 */
-	public void addCssClasses(Class C, ArrayList<String> css);
+	public void addCssClasses(Class<? extends AbstractTag> C, ArrayList<String> css);
 
 	/**
 	 * Perform any preprocessing.

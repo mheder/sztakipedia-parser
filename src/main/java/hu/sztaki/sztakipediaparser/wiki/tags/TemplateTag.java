@@ -44,7 +44,7 @@ public class TemplateTag extends AbstractTag {
 	/**
 	 * True if the original wikitext of the template has newline characters.
 	 */
-	private boolean multiline = false;
+	private boolean multiline = false; // TODO implement
 
 	private int id = 0;
 

@@ -57,7 +57,7 @@ public class ImageTag extends AbstractTag {
 	private int type = TYPE_NULL;
 	private boolean border = false;
 	private int location = LOCATION_RIGHT;
-	private int alignment = ALIGN_MIDDLE;
+	private int alignment = ALIGN_MIDDLE; // TODO implement alignment
 	private boolean resize = false;
 	private boolean upright = false;
 	private float uprightFactor = 0;
