@@ -22,6 +22,7 @@
 package hu.sztaki.sztakipediaparser.wiki.converter;
 
 import java.util.Formatter;
+import java.util.regex.Pattern;
 
 /**
  * Class to store some utility methods.
@@ -35,6 +36,14 @@ import java.util.Formatter;
  * @since 2011
  */
 public class ConverterUtils {
+	
+	static final Pattern trimWhitespacePattern;
+	
+	static {
+		final String whitespaceRegex = "[_ \t\r\n]";
+		trimWhitespacePattern = Pattern.compile("^" + whitespaceRegex + "*+(.*?)" + whitespaceRegex + "*$");		
+	}
+	
 	/**
 	 * Trims whitespace and underscore characters from both ends of the string.
 	 * 
@@ -42,18 +51,7 @@ public class ConverterUtils {
 	 * @return Trimmed string.
 	 */
 	public static String trim(String str) {
-		while (str.startsWith("_") || str.startsWith(" ")
-				|| str.startsWith("\n") || str.startsWith("\t")
-				|| str.startsWith("\r")) {
-			str = str.substring(1);
-		}
-
-		while (str.endsWith("_") || str.endsWith(" ") || str.endsWith("\n")
-				|| str.endsWith("\r") || str.endsWith("\t")) {
-			str = str.substring(0, str.length() - 1);
-		}
-
-		return str;
+		return trimWhitespacePattern.matcher(str).group(1);
 	}
 
 	/**
