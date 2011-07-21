@@ -15,6 +15,7 @@ import hu.sztaki.sztakipediaparser.wiki.tags.*;
  *         href="http://sztaki.hu">MTA SZTAKI</a>
  * @since 2011
  */
+@SuppressWarnings("unused")
 public class JavaCCWikiParser implements IWikiParser, JavaCCWikiParserConstants {
         private IWikiConverter c;
 
@@ -3298,6 +3299,7 @@ public class JavaCCWikiParser implements IWikiParser, JavaCCWikiParserConstants 
     throw generateParseException();
   }
 
+  @SuppressWarnings("serial")
   static private final class LookaheadSuccess extends java.lang.Error { }
   final private LookaheadSuccess jj_ls = new LookaheadSuccess();
   private boolean jj_scan_token(int kind) {
