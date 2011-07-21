@@ -25,7 +25,6 @@ import hu.sztaki.sztakipediaparser.localization.DefaultLanguageHandler;
 import hu.sztaki.sztakipediaparser.wiki.parser.IWikiParser;
 import hu.sztaki.sztakipediaparser.wiki.parser.JavaCCWikiParser;
 import hu.sztaki.sztakipediaparser.wiki.parser.Splitter;
-import hu.sztaki.sztakipediaparser.wiki.tags.AbstractTag;
 import hu.sztaki.sztakipediaparser.wiki.tags.AnchorTag;
 import hu.sztaki.sztakipediaparser.wiki.tags.BodyTag;
 import hu.sztaki.sztakipediaparser.wiki.tags.BoldTag;
@@ -37,7 +36,8 @@ import hu.sztaki.sztakipediaparser.wiki.tags.ItalicTag;
 import hu.sztaki.sztakipediaparser.wiki.tags.ParagraphTag;
 import hu.sztaki.sztakipediaparser.wiki.tags.RawWikiTag;
 import hu.sztaki.sztakipediaparser.wiki.tags.ReferenceTag;
-import hu.sztaki.sztakipediaparser.wiki.tags.StringTag;
+import hu.sztaki.sztakipediaparser.wiki.tags.Tag;
+import hu.sztaki.sztakipediaparser.wiki.tags.TextTag;
 import hu.sztaki.sztakipediaparser.wiki.tags.TableCaptionTag;
 import hu.sztaki.sztakipediaparser.wiki.tags.TableCellTag;
 import hu.sztaki.sztakipediaparser.wiki.tags.TableColHeadingTag;
@@ -57,7 +57,9 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Stack;
 
 /**
@@ -82,7 +84,7 @@ public class DefaultWikiConverter implements IWikiConverter {
 	/**
 	 * Tree storing the html tags.
 	 */
-	private AbstractTag tagtree;
+	private Tag tagtree;
 
 	/**
 	 * The top node of the tag stack is the actual node. If adding a new node to
@@ -94,12 +96,12 @@ public class DefaultWikiConverter implements IWikiConverter {
 	 * sense. However, a pair of ''' bold nodes can have any other nodes between
 	 * them.)
 	 */
-	private Stack<AbstractTag> tagStack = new Stack<AbstractTag>();
+	private Stack<Tag> tagStack = new Stack<Tag>();
 
 	/**
 	 * This hashmap defines an array of css classes for each tag.
 	 */
-	private HashMap<Class<? extends AbstractTag>, String[]> cssClasses = new HashMap<Class<? extends AbstractTag>, String[]>();
+	private Map<Class<? extends Tag>, String[]> cssClasses = new HashMap<Class<? extends Tag>, String[]>();
 
 	/**
 	 * Used to number unnamed external links.
@@ -229,7 +231,7 @@ public class DefaultWikiConverter implements IWikiConverter {
 
 	public void addExternalLinkTag(String url, String alias, boolean plainlink,
 			String wikitext) {
-		AbstractTag parent = peekTagStack();
+		Tag parent = peekTagStack();
 		AnchorTag tag = new AnchorTag(parent);
 
 		url = ConverterUtils.trim(url);
@@ -246,7 +248,7 @@ public class DefaultWikiConverter implements IWikiConverter {
 			reduceTagStack(); // Finished with this tag, pop it from the stack.
 		} else {
 			// There is no alias so use the url counter.
-			tag.addChild(new StringTag(tag, "[" + urlCounter + "]"));
+			tag.addChild(new TextTag(tag, "[" + urlCounter + "]"));
 			++urlCounter;
 		}
 
@@ -254,7 +256,7 @@ public class DefaultWikiConverter implements IWikiConverter {
 		parent.addChild(tag);
 	}
 
-	public void addInternalLinkTag(String url, ArrayList<String> params,
+	public void addInternalLinkTag(String url, List<String> params,
 			String wikitext) {
 		// Handle File and Image links
 		if (url.startsWith(DefaultLanguageHandler
@@ -276,7 +278,7 @@ public class DefaultWikiConverter implements IWikiConverter {
 			return;
 		}
 
-		AbstractTag parent = peekTagStack();
+		Tag parent = peekTagStack();
 		AnchorTag tag = new AnchorTag(parent);
 
 		// TODO Handle Interlanguage and InterWiki links
@@ -308,22 +310,22 @@ public class DefaultWikiConverter implements IWikiConverter {
 			reduceTagStack(); // Finished with this tag, pop it from the stack.
 		} else {
 			// Use the URL as alias if none specified
-			tag.addChild(new StringTag(tag, url));
+			tag.addChild(new TextTag(tag, url));
 		}
 
 		parent.addChild(tag);
 	}
 
 	public void addStringTag(String content) {
-		AbstractTag parent = peekTagStack();
+		Tag parent = peekTagStack();
 
-		StringTag tag = new StringTag(parent, content);
+		TextTag tag = new TextTag(parent, content);
 		parent.addChild(tag);
 	}
 
 	public void startBoldTag(String wikitext) {
 		// Query parent tag
-		AbstractTag parent = peekTagStack();
+		Tag parent = peekTagStack();
 
 		// Create tag and set properties
 		BoldTag tag = new BoldTag(parent);
@@ -342,7 +344,7 @@ public class DefaultWikiConverter implements IWikiConverter {
 
 	public void startItalicTag(String wikitext) {
 		// Query parent tag
-		AbstractTag parent = peekTagStack();
+		Tag parent = peekTagStack();
 
 		// Create tag and set properties
 		ItalicTag tag = new ItalicTag(parent);
@@ -361,7 +363,7 @@ public class DefaultWikiConverter implements IWikiConverter {
 
 	public void startSectionHeading(String wikitext) {
 		// Get parent tag
-		AbstractTag parent = peekTagStack();
+		Tag parent = peekTagStack();
 
 		// Create tag and set properties
 		HeadingTag tag = new HeadingTag(parent);
@@ -381,7 +383,7 @@ public class DefaultWikiConverter implements IWikiConverter {
 
 	public void startSubSectionHeading(String wikitext) {
 		// Get parent tag
-		AbstractTag parent = peekTagStack();
+		Tag parent = peekTagStack();
 
 		// Create tag and set properties
 		HeadingTag tag = new HeadingTag(parent);
@@ -401,7 +403,7 @@ public class DefaultWikiConverter implements IWikiConverter {
 
 	public void startSubSubSectionHeading(String wikitext) {
 		// Get parent tag
-		AbstractTag parent = peekTagStack();
+		Tag parent = peekTagStack();
 
 		// Create tag and set properties
 		HeadingTag tag = new HeadingTag(parent);
@@ -421,7 +423,7 @@ public class DefaultWikiConverter implements IWikiConverter {
 
 	public void addHorizontalRuler(String wikitext) {
 		// Get parent tag
-		AbstractTag parent = peekTagStack();
+		Tag parent = peekTagStack();
 
 		// Create HRTag and set parameters
 		HRTag tag = new HRTag(parent);
@@ -433,7 +435,7 @@ public class DefaultWikiConverter implements IWikiConverter {
 
 	public void startParagraph(String wikitext) {
 		// Get parent tag
-		AbstractTag parent = peekTagStack();
+		Tag parent = peekTagStack();
 
 		// Create ParagraphTag and set its properties
 		ParagraphTag tag = new ParagraphTag(parent);
@@ -457,7 +459,7 @@ public class DefaultWikiConverter implements IWikiConverter {
 					apiURL, mediaUrl);
 			c.setUrlCounter(urlCounter);
 			c.setTemplateID(templateID);
-			for (Class<? extends AbstractTag> key : cssClasses.keySet()) {
+			for (Class<? extends Tag> key : cssClasses.keySet()) {
 				String[] classes = cssClasses.get(key);
 				ArrayList<String> value = new ArrayList<String>(classes.length);
 				for (int i = 0; i < classes.length; i++) {
@@ -478,7 +480,7 @@ public class DefaultWikiConverter implements IWikiConverter {
 			String name = params[0];
 
 			int index = 1;
-			AbstractTag parent = peekTagStack();
+			Tag parent = peekTagStack();
 			TemplateTag tag = new TemplateTag(parent);
 			tag.addClass("wiki-template");
 			if (multiline) {
@@ -525,7 +527,7 @@ public class DefaultWikiConverter implements IWikiConverter {
 	}
 
 	public void addRawWikiTag(String wikitext) {
-		AbstractTag parent = peekTagStack();
+		Tag parent = peekTagStack();
 		RawWikiTag tag = new RawWikiTag(parent);
 		tag.setWikitext(wikitext);
 		parent.addChild(tag);
@@ -537,7 +539,7 @@ public class DefaultWikiConverter implements IWikiConverter {
 			w += wikitext;
 		}
 
-		AbstractTag parent = peekTagStack();
+		Tag parent = peekTagStack();
 		IndentTag tag = new IndentTag(parent);
 		tag.setWikitext(w);
 		tag.setLeveL(level);
@@ -545,7 +547,7 @@ public class DefaultWikiConverter implements IWikiConverter {
 	}
 
 	public void startList(boolean wrap) {
-		AbstractTag parent = peekTagStack();
+		Tag parent = peekTagStack();
 
 		UnorderedListTag tag = new UnorderedListTag(parent);
 		tag.setWrap(wrap);
@@ -559,7 +561,7 @@ public class DefaultWikiConverter implements IWikiConverter {
 	}
 
 	public void addListItem(String str) {
-		AbstractTag parent = peekTagStack();
+		Tag parent = peekTagStack();
 
 		UnorderedListItemTag tag = new UnorderedListItemTag(parent);
 		parent.addChild(tag);
@@ -571,7 +573,7 @@ public class DefaultWikiConverter implements IWikiConverter {
 	}
 
 	public void startTable(String params, String caption) {
-		AbstractTag parent = peekTagStack();
+		Tag parent = peekTagStack();
 
 		TableTag tag = new TableTag(parent, params);
 		parent.addChild(tag);
@@ -593,7 +595,7 @@ public class DefaultWikiConverter implements IWikiConverter {
 	}
 
 	public void addTableColHeading(String heading, String params) {
-		AbstractTag parent = peekTagStack();
+		Tag parent = peekTagStack();
 
 		if (parent instanceof TableRowTag) {
 			TableColHeadingTag tag = new TableColHeadingTag(parent, params);
@@ -608,7 +610,7 @@ public class DefaultWikiConverter implements IWikiConverter {
 	}
 
 	public void addTableRowHeading(String heading, String params) {
-		AbstractTag parent = peekTagStack();
+		Tag parent = peekTagStack();
 
 		if (parent instanceof TableRowTag) {
 			TableRowTag row = (TableRowTag) parent;
@@ -624,7 +626,7 @@ public class DefaultWikiConverter implements IWikiConverter {
 	}
 
 	public void startTableRow(String params) {
-		AbstractTag parent = peekTagStack();
+		Tag parent = peekTagStack();
 
 		if (parent instanceof TableTag) {
 			TableTag table = (TableTag) parent;
@@ -639,7 +641,7 @@ public class DefaultWikiConverter implements IWikiConverter {
 	}
 
 	public void addTableCell(String content, String params) {
-		AbstractTag parent = peekTagStack();
+		Tag parent = peekTagStack();
 
 		if (parent instanceof TableRowTag) {
 			TableRowTag row = (TableRowTag) parent;
@@ -655,7 +657,7 @@ public class DefaultWikiConverter implements IWikiConverter {
 	}
 
 	public void addReferenceTag(String str) {
-		AbstractTag parent = peekTagStack();
+		Tag parent = peekTagStack();
 		ReferenceTag tag = new ReferenceTag(parent, refID);
 		++refID;
 
@@ -677,8 +679,8 @@ public class DefaultWikiConverter implements IWikiConverter {
 		if (renderBodyTag) {
 			tagtree.render(b);
 		} else {
-			ArrayList<AbstractTag> children = tagtree.getChildren();
-			for (AbstractTag c : children) {
+			List<Tag> children = tagtree.getChildren();
+			for (Tag c : children) {
 				c.render(b);
 			}
 		}
@@ -688,7 +690,7 @@ public class DefaultWikiConverter implements IWikiConverter {
 		tagStack.clear();
 	}
 
-	public void addCssClasses(Class<? extends AbstractTag> C, ArrayList<String> css) {
+	public void addCssClasses(Class<? extends Tag> C, List<String> css) {
 		if (css == null || C == null)
 			return;
 
@@ -717,7 +719,7 @@ public class DefaultWikiConverter implements IWikiConverter {
 	 * @param wikitext
 	 *            Original wikitext.
 	 */
-	private void addImageTag(String url, ArrayList<String> params,
+	private void addImageTag(String url, List<String> params,
 			String wikitext) {
 		String realUrl = "";
 
@@ -725,7 +727,7 @@ public class DefaultWikiConverter implements IWikiConverter {
 		if (url.startsWith(":")) {
 			// Linking directly to the description page of the image
 			url = url.substring(1);
-			AbstractTag parent = peekTagStack();
+			Tag parent = peekTagStack();
 
 			// Create the link tag. Its parent is the actual node on top of the
 			// stack.
@@ -771,7 +773,7 @@ public class DefaultWikiConverter implements IWikiConverter {
 					+ URLEncoder.encode(filename, "UTF-8");
 
 			// Create nodes
-			AbstractTag parent = peekTagStack();
+			Tag parent = peekTagStack();
 
 			ImageTag imgTag = new ImageTag(parent);
 			imgTag.setWikitext(wikitext);
@@ -899,7 +901,7 @@ public class DefaultWikiConverter implements IWikiConverter {
 	 * 
 	 * @return Top element of tag stack or the root node of the tag tree.
 	 */
-	private AbstractTag reduceTagStack() {
+	private Tag reduceTagStack() {
 		if (tagStack.isEmpty()) {
 			return tagtree;
 		}
@@ -913,7 +915,7 @@ public class DefaultWikiConverter implements IWikiConverter {
 	 * 
 	 * @return Top element of tag stack or the root node of the tag tree.
 	 */
-	private AbstractTag peekTagStack() {
+	private Tag peekTagStack() {
 		if (tagStack.isEmpty()) {
 			return tagtree;
 		}
@@ -922,11 +924,11 @@ public class DefaultWikiConverter implements IWikiConverter {
 	}
 
 	/**
-	 * Pushes a new AbstractTag to the tag stack.
+	 * Pushes a new Tag to the tag stack.
 	 * 
 	 * @param tag
 	 */
-	private void pushToStack(AbstractTag tag) {
+	private void pushToStack(Tag tag) {
 		tagStack.push(tag);
 	}
 
@@ -935,7 +937,7 @@ public class DefaultWikiConverter implements IWikiConverter {
 	 * 
 	 * @param tag
 	 */
-	private void addCssClasses(AbstractTag tag) {
+	private void addCssClasses(Tag tag) {
 		String[] css = cssClasses.get(tag.getClass());
 		if (css != null) {
 			for (int i = 0; i < css.length; i++) {
@@ -956,9 +958,9 @@ public class DefaultWikiConverter implements IWikiConverter {
 	public void postprocess(String wikitext) {
 		// Run postprocessing
 		if (postprocess) {
-			AbstractTag node;
+			Tag node;
 			int lastmatch = 0;
-			ArrayList<AbstractTag> queue = new ArrayList<AbstractTag>();
+			List<Tag> queue = new ArrayList<Tag>();
 			queue.add(tagtree);
 
 			while (!queue.isEmpty()) {
@@ -966,21 +968,22 @@ public class DefaultWikiConverter implements IWikiConverter {
 
 				// Autolink bare urls.
 				if (autoLink) {
-					if (node instanceof StringTag) {
+					if (node instanceof TextTag) {
 						Splitter splitter = new Splitter(
 								"(((http://|https://|ftp://)?www\\.)|((http://|https://|ftp://)(www\\.)?))[A-Za-z0-9\\._/~%\\-\\+&#\\?!=\\(\\)@\\\\]+",
 								true);
-						String content = ((StringTag) node).getContent();
+						String content = ((TextTag) node).getContent();
 						String[] parts = splitter.split(content);
 
-						((StringTag) node).setContent(parts[0]);
+						((TextTag) node).setContent(parts[0]);
 						for (int i = 1; i < parts.length; i++) {
 							if (i % 2 == 0 && !parts[i].isEmpty()) {
 								// Content
-								StringTag tag = new StringTag(node, parts[i]);
+								TextTag tag = new TextTag(node, parts[i]);
 								node.addChild(tag);
 							} else if (!parts[i].isEmpty()) {
 								// URL
+								// TODO Create an URLTag instead of TemplateTag								
 								TemplateTag tag = new TemplateTag(node, false);
 								tag.setName("URL");
 								tag.addClass("wiki-template");
@@ -996,10 +999,10 @@ public class DefaultWikiConverter implements IWikiConverter {
 				// Set begin and end parameters for String tags and Raw wiki
 				// tags.
 				if (setBeginEnd) {
-					if (node instanceof StringTag || node instanceof RawWikiTag) {
+					if (node instanceof TextTag || node instanceof RawWikiTag) {
 						String content = "";
-						if (node instanceof StringTag)
-							content = ((StringTag) node).getContent();
+						if (node instanceof TextTag)
+							content = ((TextTag) node).getContent();
 						if (node instanceof RawWikiTag)
 							content = ((RawWikiTag) node).getWikitext();
 
@@ -1012,7 +1015,7 @@ public class DefaultWikiConverter implements IWikiConverter {
 					}
 				}
 
-				ArrayList<AbstractTag> children = node.getChildren();
+				List<Tag> children = node.getChildren();
 				if (children != null) {
 					queue.addAll(0, children);
 				}
@@ -1074,11 +1077,11 @@ public class DefaultWikiConverter implements IWikiConverter {
 		return templateID;
 	}
 
-	public void setBeginEnd(boolean setBeginEnd) {
+	public void setStoreBeginEnd(boolean setBeginEnd) {
 		this.setBeginEnd = setBeginEnd;
 	}
 
-	public boolean setBeginEnd() {
+	public boolean getStoreBeginEnd() {
 		return setBeginEnd;
 	}
 }

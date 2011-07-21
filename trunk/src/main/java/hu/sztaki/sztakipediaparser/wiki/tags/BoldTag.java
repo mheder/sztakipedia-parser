@@ -21,6 +21,8 @@
  */
 package hu.sztaki.sztakipediaparser.wiki.tags;
 
+import hu.sztaki.sztakipediaparser.wiki.visitor.TagVisitor;
+
 /**
  * Represents a bold tag in the AST.
  * 
@@ -34,7 +36,7 @@ public class BoldTag extends AbstractTag {
 		super();
 	}
 
-	public BoldTag(AbstractTag parent) {
+	public BoldTag(Tag parent) {
 		super(parent);
 	}
 
@@ -48,13 +50,17 @@ public class BoldTag extends AbstractTag {
 	}
 
 	@Override
-	protected void openTag(StringBuilder b) {
+	public void openTag(StringBuilder b) {
 		b.append("<b>");
 	}
 
 	@Override
-	protected void closeTag(StringBuilder b) {
+	public void closeTag(StringBuilder b) {
 		b.append("</b>");
 	}
+	
+    public void accept(TagVisitor visitor) {
+        visitor.visit(this);
+    }	
 
 }

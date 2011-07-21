@@ -21,6 +21,8 @@
  */
 package hu.sztaki.sztakipediaparser.wiki.tags;
 
+import hu.sztaki.sztakipediaparser.wiki.visitor.TagVisitor;
+
 /**
  * Represents a horizontal ruler in the AST.
  * 
@@ -34,7 +36,7 @@ public class HRTag extends AbstractTag {
 		super();
 	}
 
-	public HRTag(AbstractTag parent) {
+	public HRTag(Tag parent) {
 		super(parent);
 	}
 
@@ -48,7 +50,7 @@ public class HRTag extends AbstractTag {
 	}
 
 	@Override
-	protected void openTag(StringBuilder b) {
+	public void openTag(StringBuilder b) {
 		b.append("<hr");
 
 		renderCssClasses(b);
@@ -56,8 +58,12 @@ public class HRTag extends AbstractTag {
 	}
 
 	@Override
-	protected void closeTag(StringBuilder b) {
+	public void closeTag(StringBuilder b) {
 		b.append(" />");
 	}
+	
+    public void accept(TagVisitor visitor) {
+        visitor.visit(this);
+    }	
 
 }

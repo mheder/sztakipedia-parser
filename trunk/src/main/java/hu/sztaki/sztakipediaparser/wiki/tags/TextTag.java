@@ -21,6 +21,8 @@
  */
 package hu.sztaki.sztakipediaparser.wiki.tags;
 
+import hu.sztaki.sztakipediaparser.wiki.visitor.TagVisitor;
+
 /**
  * Represents any free text in the AST.
  * 
@@ -28,7 +30,7 @@ package hu.sztaki.sztakipediaparser.wiki.tags;
  *         href="http://sztaki.hu">MTA SZTAKI</a>
  * @since 2011
  */
-public class StringTag extends AbstractTag {
+public class TextTag extends AbstractTag {
 	/**************/
 	/*** Fields ***/
 	/**************/
@@ -38,12 +40,12 @@ public class StringTag extends AbstractTag {
 	/*** Constructors ***/
 	/********************/
 
-	public StringTag(String content) {
+	public TextTag(String content) {
 		super();
 		this.content = content;
 	}
 
-	public StringTag(AbstractTag parent, String content) {
+	public TextTag(Tag parent, String content) {
 		super(parent);
 		this.content = content;
 	}
@@ -62,7 +64,7 @@ public class StringTag extends AbstractTag {
 	}
 
 	@Override
-	protected void openTag(StringBuilder b) {
+	public void openTag(StringBuilder b) {
 		if (!attributes.isEmpty()) {
 			b.append("<span");
 			renderAttributes(b);
@@ -71,7 +73,7 @@ public class StringTag extends AbstractTag {
 	}
 
 	@Override
-	protected void closeTag(StringBuilder b) {
+	public void closeTag(StringBuilder b) {
 		if (!attributes.isEmpty()) {
 			b.append("</span>");
 		}
@@ -88,4 +90,9 @@ public class StringTag extends AbstractTag {
 	public void setContent(String content) {
 		this.content = content;
 	}
+	
+    public void accept(TagVisitor visitor) {
+        visitor.visit(this);
+    }	
+
 }

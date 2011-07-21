@@ -21,6 +21,8 @@
  */
 package hu.sztaki.sztakipediaparser.wiki.tags;
 
+import hu.sztaki.sztakipediaparser.wiki.visitor.TagVisitor;
+
 /**
  * Represents an anchor in the AST.
  * 
@@ -49,7 +51,7 @@ public class AnchorTag extends AbstractTag {
 		super();
 	}
 
-	public AnchorTag(AbstractTag parent) {
+	public AnchorTag(Tag parent) {
 		super(parent);
 	}
 
@@ -82,7 +84,7 @@ public class AnchorTag extends AbstractTag {
 	}
 
 	@Override
-	protected void openTag(StringBuilder b) {
+	public void openTag(StringBuilder b) {
 		b.append("<a");
 
 		// Add attributes
@@ -95,7 +97,7 @@ public class AnchorTag extends AbstractTag {
 	}
 
 	@Override
-	protected void closeTag(StringBuilder b) {
+	public void closeTag(StringBuilder b) {
 		b.append("</a>");
 	}
 
@@ -110,4 +112,9 @@ public class AnchorTag extends AbstractTag {
 	public void setPlainlink(boolean plainlink) {
 		this.plainlink = plainlink;
 	}
+	
+    public void accept(TagVisitor visitor) {
+        visitor.visit(this);
+    }	
+
 }

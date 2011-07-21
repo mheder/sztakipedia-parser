@@ -21,6 +21,8 @@
  */
 package hu.sztaki.sztakipediaparser.wiki.tags;
 
+import hu.sztaki.sztakipediaparser.wiki.visitor.TagVisitor;
+
 /**
  * Represents a div tag in the AST.
  * 
@@ -51,7 +53,7 @@ public class DivTag extends AbstractTag {
 	}
 
 	@Override
-	protected void openTag(StringBuilder b) {
+	public void openTag(StringBuilder b) {
 		b.append("<div");
 
 		// Add attributes
@@ -64,8 +66,12 @@ public class DivTag extends AbstractTag {
 	}
 
 	@Override
-	protected void closeTag(StringBuilder b) {
+	public void closeTag(StringBuilder b) {
 		b.append("</div>");
 	}
+	
+    public void accept(TagVisitor visitor) {
+        visitor.visit(this);
+    }	
 
 }

@@ -21,6 +21,8 @@
  */
 package hu.sztaki.sztakipediaparser.wiki.tags;
 
+import hu.sztaki.sztakipediaparser.wiki.visitor.TagVisitor;
+
 /**
  * Represents a table column heading in the AST.
  * 
@@ -39,7 +41,7 @@ public class TableColHeadingTag extends AbstractTag {
 		super(parent);
 	}
 
-	public TableColHeadingTag(AbstractTag parent, String params) {
+	public TableColHeadingTag(Tag parent, String params) {
 		super(parent);
 		this.params = params;
 	}
@@ -52,7 +54,7 @@ public class TableColHeadingTag extends AbstractTag {
 	}
 
 	@Override
-	protected void openTag(StringBuilder b) {
+	public void openTag(StringBuilder b) {
 		b.append("<th");
 		renderCssClasses(b);
 		renderAttributes(b);
@@ -63,7 +65,12 @@ public class TableColHeadingTag extends AbstractTag {
 	}
 
 	@Override
-	protected void closeTag(StringBuilder b) {
+	public void closeTag(StringBuilder b) {
 		b.append("</th>");
 	}
+	
+    public void accept(TagVisitor visitor) {
+        visitor.visit(this);
+    }	
+	
 }

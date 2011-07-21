@@ -37,11 +37,13 @@ import java.util.regex.Pattern;
  */
 public class ConverterUtils {
 	
-	static final Pattern trimWhitespacePattern;
+	static final Pattern whitespaceLeftPattern;
+	static final Pattern whitespaceRightPattern;
 	
 	static {
 		final String whitespaceRegex = "[_ \t\r\n]";
-		trimWhitespacePattern = Pattern.compile("^" + whitespaceRegex + "*+(.*?)" + whitespaceRegex + "*$");		
+		whitespaceLeftPattern = Pattern.compile("^" + whitespaceRegex + "+");		
+		whitespaceRightPattern = Pattern.compile(whitespaceRegex + "+$");		
 	}
 	
 	/**
@@ -51,7 +53,9 @@ public class ConverterUtils {
 	 * @return Trimmed string.
 	 */
 	public static String trim(String str) {
-		return trimWhitespacePattern.matcher(str).group(1);
+		str = whitespaceLeftPattern.matcher(str).replaceFirst("");
+		str = whitespaceRightPattern.matcher(str).replaceFirst("");
+		return str;
 	}
 
 	/**

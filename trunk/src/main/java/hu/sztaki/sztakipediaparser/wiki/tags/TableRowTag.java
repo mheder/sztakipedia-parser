@@ -21,6 +21,8 @@
  */
 package hu.sztaki.sztakipediaparser.wiki.tags;
 
+import hu.sztaki.sztakipediaparser.wiki.visitor.TagVisitor;
+
 /**
  * Represents a table row in the AST.
  * 
@@ -52,7 +54,7 @@ public class TableRowTag extends AbstractTag {
 	}
 
 	@Override
-	protected void openTag(StringBuilder b) {
+	public void openTag(StringBuilder b) {
 		b.append("<tr");
 		renderCssClasses(b);
 		renderAttributes(b);
@@ -63,8 +65,12 @@ public class TableRowTag extends AbstractTag {
 	}
 
 	@Override
-	protected void closeTag(StringBuilder b) {
+	public void closeTag(StringBuilder b) {
 		b.append("</tr>");
 	}
+	
+    public void accept(TagVisitor visitor) {
+        visitor.visit(this);
+    }
 
 }

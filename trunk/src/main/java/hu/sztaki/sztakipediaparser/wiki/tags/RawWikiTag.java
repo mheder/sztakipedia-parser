@@ -21,6 +21,8 @@
  */
 package hu.sztaki.sztakipediaparser.wiki.tags;
 
+import hu.sztaki.sztakipediaparser.wiki.visitor.TagVisitor;
+
 /**
  * Represents raw wiki content in the AST. A raw wiki tag added to the AST upon
  * some parser error. The content is snippet of the wikitext that could not be
@@ -35,7 +37,7 @@ public class RawWikiTag extends AbstractTag {
 		super();
 	}
 
-	public RawWikiTag(AbstractTag parent) {
+	public RawWikiTag(Tag parent) {
 		super(parent);
 	}
 
@@ -48,14 +50,19 @@ public class RawWikiTag extends AbstractTag {
 	}
 
 	@Override
-	protected void openTag(StringBuilder b) {
+	public void openTag(StringBuilder b) {
 		b.append("<span class=\"raw-wikitext\"");
 		renderAttributes(b);
 		b.append(">");
 	}
 
 	@Override
-	protected void closeTag(StringBuilder b) {
+	public void closeTag(StringBuilder b) {
 		b.append("</span>");
 	}
+	
+    public void accept(TagVisitor visitor) {
+        visitor.visit(this);
+    }	
+	
 }

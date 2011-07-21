@@ -21,6 +21,8 @@
  */
 package hu.sztaki.sztakipediaparser.wiki.tags;
 
+import hu.sztaki.sztakipediaparser.wiki.visitor.TagVisitor;
+
 import java.util.ArrayList;
 
 /**
@@ -70,7 +72,7 @@ public class ImageTag extends AbstractTag {
 		super();
 	}
 
-	public ImageTag(AbstractTag parent) {
+	public ImageTag(Tag parent) {
 		super(parent);
 	}
 
@@ -190,7 +192,7 @@ public class ImageTag extends AbstractTag {
 	}
 
 	@Override
-	protected void openTag(StringBuilder b) {
+	public void openTag(StringBuilder b) {
 		b.append("<img");
 
 		// Add attributes
@@ -201,7 +203,7 @@ public class ImageTag extends AbstractTag {
 	}
 
 	@Override
-	protected void closeTag(StringBuilder b) {
+	public void closeTag(StringBuilder b) {
 		b.append(" />");
 	}
 
@@ -262,4 +264,9 @@ public class ImageTag extends AbstractTag {
 		this.link = link;
 		this.enableLink = true;
 	}
+	
+    public void accept(TagVisitor visitor) {
+        visitor.visit(this);
+    }	
+
 }

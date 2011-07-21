@@ -21,6 +21,8 @@
  */
 package hu.sztaki.sztakipediaparser.wiki.tags;
 
+import hu.sztaki.sztakipediaparser.wiki.visitor.TagVisitor;
+
 import java.util.ArrayList;
 
 /**
@@ -57,12 +59,12 @@ public class TemplateTag extends AbstractTag {
 		super();
 	}
 
-	public TemplateTag(AbstractTag parent) {
+	public TemplateTag(Tag parent) {
 		super(parent);
 	}
 
-	public TemplateTag(AbstractTag parent, boolean multiline) {
-		super(parent);
+	public TemplateTag(Tag node, boolean multiline) {
+		super(node);
 		this.multiline = multiline;
 	}
 
@@ -79,7 +81,7 @@ public class TemplateTag extends AbstractTag {
 	}
 
 	@Override
-	protected void openTag(StringBuilder b) {
+	public void openTag(StringBuilder b) {
 		b.append("<div onclick=\"edit_wiki_template(this)\" "
 				+ "onmouseover=\"show_wiki_template(this)\"");
 		renderAttributes(b);
@@ -89,7 +91,7 @@ public class TemplateTag extends AbstractTag {
 	}
 
 	@Override
-	protected void closeTag(StringBuilder b) {
+	public void closeTag(StringBuilder b) {
 		b.append("</div>");
 	}
 
@@ -142,4 +144,9 @@ public class TemplateTag extends AbstractTag {
 	private String squeeze(String str) {
 		return str.replaceAll("( |\\t)+", " ").trim();
 	}
+	
+    public void accept(TagVisitor visitor) {
+        visitor.visit(this);
+    }	
+
 }
