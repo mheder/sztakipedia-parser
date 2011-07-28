@@ -47,46 +47,24 @@ public class TableTag extends AbstractTag {
 		this.params = params;
 	}
 
-	@Override
-	public void render(StringBuilder b) {
-		openTag(b);
-		if (caption != null) {
-			caption.render(b);
-		}
-
-		b.append("<tbody>");
-		renderChildren(b);
-		b.append("</tbody>");
-
-		closeTag(b);
-	}
-
-	@Override
-	public void openTag(StringBuilder b) {
-		b.append("<table");
-		renderCssClasses(b);
-		renderAttributes(b);
-		if (params != null && !params.isEmpty()) {
-			b.append(" " + params);
-		}
-		b.append(">");
-	}
-
-	@Override
-	public void closeTag(StringBuilder b) {
-		b.append("</table>");
-	}
-
 	public void setParams(String params) {
 		this.params = params;
+	}
+
+	public String getParams() {
+		return params;
 	}
 
 	public void setCaption(TableCaptionTag caption) {
 		this.caption = caption;
 	}
-	
-    public void accept(TagVisitor visitor) {
-        visitor.visit(this);
-    }
-	
+
+	public TableCaptionTag getCaption() {
+		return caption;
+	}
+
+	public void accept(TagVisitor visitor) {
+		visitor.visit(this);
+	}
+
 }

@@ -34,7 +34,7 @@ import java.util.Map;
  *         href="http://sztaki.hu">MTA SZTAKI</a>
  * @since 2011
  */
-public interface Tag extends TreeNode<Tag>  {
+public interface Tag extends TreeNode<Tag> {
 
 	/***************/
 	/*** Methods ***/
@@ -67,37 +67,11 @@ public interface Tag extends TreeNode<Tag>  {
 	public void addClasses(List<String> c);
 
 	/**
-	 * Render the appropriate HTML code string.
-	 * 
-	 * @return
-	 * @deprecated Move rendering code to separate class according to <em>Visitor</em> pattern
-	 */
-	@Deprecated
-	public abstract void render(StringBuilder b);
-
-	/**
-	 * Render the opening part of the HTML tag, like <code>&lt;div></code>
-	 * 
-	 * @param b
-	 * @deprecated Move rendering code to separate class according to <em>Visitor</em> pattern
-	 */
-	@Deprecated
-	void openTag(StringBuilder b);
-
-	/**
-	 * Render the closing part of the HTML tag, like <code>&lt;/div></code>
-	 * 
-	 * @param b
-	 * @deprecated Move rendering code to separate class according to <em>Visitor</em> pattern
-	 */
-	@Deprecated
-	void closeTag(StringBuilder b);
-
-	/**
 	 * Render the HTML of the tag's attributes.
 	 * 
 	 * @param b
-	 * @deprecated Move rendering code to separate class according to <em>Visitor</em> pattern
+	 * @deprecated Move rendering code to separate class according to
+	 *             <em>Visitor</em> pattern
 	 */
 	@Deprecated
 	void renderAttributes(StringBuilder b);
@@ -111,19 +85,11 @@ public interface Tag extends TreeNode<Tag>  {
 	void renderCssClasses(StringBuilder b);
 
 	/**
-	 * Render all children nodes of this node.
-	 * 
-	 * @param b
-	 */
-	@Deprecated
-	void renderChildren(StringBuilder b);
-
-	/**
 	 * Adds an attribute that specifies the begin and end character positions of
 	 * the construct in the original wikitext.
 	 */
 	void addBeginEndAttr();
-	
+
 	public Map<String, String> getAttributes();
 
 	public List<String> getClasses();
@@ -139,6 +105,6 @@ public interface Tag extends TreeNode<Tag>  {
 	public void setEnd(int end);
 
 	public int getEnd();
-	
+
 	public void accept(TagVisitor v);
 }

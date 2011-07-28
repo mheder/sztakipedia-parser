@@ -41,28 +41,8 @@ public class RawWikiTag extends AbstractTag {
 		super(parent);
 	}
 
-	@Override
-	public void render(StringBuilder b) {
-		addBeginEndAttr();
-		openTag(b);
-		b.append(wikitext);
-		closeTag(b);
+	public void accept(TagVisitor visitor) {
+		visitor.visit(this);
 	}
 
-	@Override
-	public void openTag(StringBuilder b) {
-		b.append("<span class=\"raw-wikitext\"");
-		renderAttributes(b);
-		b.append(">");
-	}
-
-	@Override
-	public void closeTag(StringBuilder b) {
-		b.append("</span>");
-	}
-	
-    public void accept(TagVisitor visitor) {
-        visitor.visit(this);
-    }	
-	
 }

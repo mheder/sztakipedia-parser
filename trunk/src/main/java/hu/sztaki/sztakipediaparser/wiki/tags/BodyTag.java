@@ -42,21 +42,8 @@ public class BodyTag extends AbstractTag {
 	private BodyTag(AbstractTag parent) {
 	}
 
-	@Override
-	public void render(StringBuilder b) {
-		renderChildren(b);
+	public void accept(TagVisitor visitor) {
+		visitor.visit(this);
 	}
-
-	@Override
-	public void openTag(StringBuilder b) {
-	}
-
-	@Override
-	public void closeTag(StringBuilder b) {
-	}
-	
-    public void accept(TagVisitor visitor) {
-        visitor.visit(this);
-    }	
 
 }

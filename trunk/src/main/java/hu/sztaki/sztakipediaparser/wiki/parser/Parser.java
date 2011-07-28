@@ -21,9 +21,9 @@
  */
 package hu.sztaki.sztakipediaparser.wiki.parser;
 
-import hu.sztaki.sztakipediaparser.wiki.converter.ConverterUtils;
-import hu.sztaki.sztakipediaparser.wiki.converter.DefaultWikiConverter;
-import hu.sztaki.sztakipediaparser.wiki.converter.IWikiConverter;
+import hu.sztaki.sztakipediaparser.wiki.converter.InterpreterUtils;
+import hu.sztaki.sztakipediaparser.wiki.converter.DefaultWikiInterpreter;
+import hu.sztaki.sztakipediaparser.wiki.converter.IWikiInterpreter;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -50,9 +50,9 @@ import java.nio.charset.Charset;
 public class Parser {
 	private String[] sections;
 	private Splitter splitter = new Splitter("\n==[=]?[=]?([^=]*)==[=]?[=]?");
-	private IWikiConverter c;
+	private IWikiInterpreter c;
 
-	public Parser(IWikiConverter c) {
+	public Parser(IWikiInterpreter c) {
 		this.c = c;
 	}
 
@@ -102,7 +102,7 @@ public class Parser {
 		c.postprocess(wikitext);
 		c.render(b);
 
-		return ConverterUtils.trim(b.toString());
+		return InterpreterUtils.trim(b.toString());
 	}
 
 	public static void main(String[] args) throws Exception {
@@ -121,7 +121,7 @@ public class Parser {
 				+ (System.currentTimeMillis() - time) + " ms.");
 
 		// Create converter
-		IWikiConverter c = new DefaultWikiConverter();
+		IWikiInterpreter c = new DefaultWikiInterpreter();
 
 		// Create parser
 		Parser p = new Parser(c);

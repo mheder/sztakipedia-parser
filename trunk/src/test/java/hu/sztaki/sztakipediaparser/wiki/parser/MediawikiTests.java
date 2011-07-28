@@ -22,8 +22,8 @@
 package hu.sztaki.sztakipediaparser.wiki.parser;
 
 import static org.junit.Assert.assertTrue;
-import hu.sztaki.sztakipediaparser.wiki.converter.DefaultWikiConverter;
-import hu.sztaki.sztakipediaparser.wiki.converter.IWikiConverter;
+import hu.sztaki.sztakipediaparser.wiki.converter.DefaultWikiInterpreter;
+import hu.sztaki.sztakipediaparser.wiki.converter.IWikiInterpreter;
 
 import org.junit.Test;
 
@@ -37,7 +37,7 @@ import org.junit.Test;
  */
 public class MediawikiTests {
 	private Parser parser;
-	private IWikiConverter converter;
+	private IWikiInterpreter converter;
 
 	/* Basic test inputs */
 	private String Basic1Input = "This is a simple paragraph.";
@@ -92,7 +92,7 @@ public class MediawikiTests {
 	/* Basic tests */
 	@Test
 	public void Basic1() throws Exception {
-		converter = new DefaultWikiConverter();
+		converter = new DefaultWikiInterpreter();
 		parser = new Parser(converter);
 
 		String html = parser.parse(Basic1Input);
@@ -101,7 +101,7 @@ public class MediawikiTests {
 
 	@Test
 	public void Basic2() throws Exception {
-		converter = new DefaultWikiConverter();
+		converter = new DefaultWikiInterpreter();
 		parser = new Parser(converter);
 
 		String html = parser.parse(Basic2Input);
@@ -110,7 +110,7 @@ public class MediawikiTests {
 
 	@Test
 	public void Basic3() throws Exception {
-		converter = new DefaultWikiConverter();
+		converter = new DefaultWikiInterpreter();
 		parser = new Parser(converter);
 
 		String html = parser.parse(Basic3Input);
@@ -120,7 +120,7 @@ public class MediawikiTests {
 	/* External link tests */
 	@Test
 	public void ExtLink1() throws Exception {
-		converter = new DefaultWikiConverter();
+		converter = new DefaultWikiInterpreter();
 		parser = new Parser(converter);
 
 		String html = parser.parse(ExtLink1Input);
@@ -129,7 +129,7 @@ public class MediawikiTests {
 
 	@Test
 	public void ExtLink2() throws Exception {
-		converter = new DefaultWikiConverter();
+		converter = new DefaultWikiInterpreter();
 		parser = new Parser(converter);
 
 		String html = parser.parse(ExtLink2Input);
@@ -138,7 +138,7 @@ public class MediawikiTests {
 
 	@Test
 	public void ExtLink3() throws Exception {
-		converter = new DefaultWikiConverter();
+		converter = new DefaultWikiInterpreter();
 		parser = new Parser(converter);
 
 		String html = parser.parse(ExtLink3Input);
@@ -147,7 +147,7 @@ public class MediawikiTests {
 
 	@Test
 	public void ExtLink4() throws Exception {
-		converter = new DefaultWikiConverter();
+		converter = new DefaultWikiInterpreter();
 		parser = new Parser(converter);
 
 		String html = parser.parse(ExtLink4Input);
@@ -156,7 +156,7 @@ public class MediawikiTests {
 
 	@Test
 	public void ExtLink5() throws Exception {
-		converter = new DefaultWikiConverter();
+		converter = new DefaultWikiInterpreter();
 		parser = new Parser(converter);
 
 		String html = parser.parse(ExtLink5Input);
@@ -165,7 +165,7 @@ public class MediawikiTests {
 
 	@Test
 	public void ExtLink6() throws Exception {
-		converter = new DefaultWikiConverter();
+		converter = new DefaultWikiInterpreter();
 		parser = new Parser(converter);
 
 		String html = parser.parse(ExtLink6Input);

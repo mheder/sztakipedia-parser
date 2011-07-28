@@ -40,27 +40,8 @@ public class BoldTag extends AbstractTag {
 		super(parent);
 	}
 
-	@Override
-	public void render(StringBuilder b) {
-		openTag(b);
-
-		renderChildren(b);
-
-		closeTag(b);
+	public void accept(TagVisitor visitor) {
+		visitor.visit(this);
 	}
-
-	@Override
-	public void openTag(StringBuilder b) {
-		b.append("<b>");
-	}
-
-	@Override
-	public void closeTag(StringBuilder b) {
-		b.append("</b>");
-	}
-	
-    public void accept(TagVisitor visitor) {
-        visitor.visit(this);
-    }	
 
 }

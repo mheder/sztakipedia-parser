@@ -55,52 +55,6 @@ public class AnchorTag extends AbstractTag {
 		super(parent);
 	}
 
-	/***************/
-	/*** Methods ***/
-	/***************/
-
-	@Override
-	public void render(StringBuilder b) {
-		// Handle plainlinks
-		if (plainlink) {
-			b.append("<span class=\"plainlinks\">");
-		}
-
-		// addBeginEndAttr();
-
-		// Start tag
-		openTag(b);
-
-		// Render children
-		renderChildren(b);
-
-		// End tag
-		closeTag(b);
-
-		// Handle plainlinks
-		if (plainlink) {
-			b.append("</span>");
-		}
-	}
-
-	@Override
-	public void openTag(StringBuilder b) {
-		b.append("<a");
-
-		// Add attributes
-		renderAttributes(b);
-
-		// Add CSS classes
-		renderCssClasses(b);
-
-		b.append(">");
-	}
-
-	@Override
-	public void closeTag(StringBuilder b) {
-		b.append("</a>");
-	}
-
 	/***************************/
 	/*** Getters and Setters ***/
 	/***************************/
@@ -112,9 +66,9 @@ public class AnchorTag extends AbstractTag {
 	public void setPlainlink(boolean plainlink) {
 		this.plainlink = plainlink;
 	}
-	
-    public void accept(TagVisitor visitor) {
-        visitor.visit(this);
-    }	
+
+	public void accept(TagVisitor visitor) {
+		visitor.visit(this);
+	}
 
 }

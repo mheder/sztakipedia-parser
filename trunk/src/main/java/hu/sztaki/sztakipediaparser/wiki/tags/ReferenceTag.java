@@ -41,21 +41,6 @@ public class ReferenceTag extends AbstractTag {
 		super(parent);
 	}
 
-	@Override
-	public void closeTag(StringBuilder b) {
-	}
-
-	@Override
-	public void openTag(StringBuilder b) {
-	}
-
-	@Override
-	public void render(StringBuilder b) {
-		openTag(b);
-		renderChildren(b);
-		closeTag(b);
-	}
-
 	public int getID() {
 		return id;
 	}
@@ -63,9 +48,9 @@ public class ReferenceTag extends AbstractTag {
 	public void setID(int id) {
 		this.id = id;
 	}
-	
-    public void accept(TagVisitor visitor) {
-        visitor.visit(this);
-    }	
+
+	public void accept(TagVisitor visitor) {
+		visitor.visit(this);
+	}
 
 }

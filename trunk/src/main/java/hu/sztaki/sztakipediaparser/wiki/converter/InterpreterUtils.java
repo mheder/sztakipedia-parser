@@ -35,7 +35,7 @@ import java.util.regex.Pattern;
  *         href="http://sztaki.hu">MTA SZTAKI</a>
  * @since 2011
  */
-public class ConverterUtils {
+public class InterpreterUtils {
 	
 	static final Pattern whitespaceLeftPattern;
 	static final Pattern whitespaceRightPattern;

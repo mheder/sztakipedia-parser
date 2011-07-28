@@ -23,8 +23,6 @@ package hu.sztaki.sztakipediaparser.wiki.tags;
 
 import hu.sztaki.sztakipediaparser.wiki.visitor.TagVisitor;
 
-import java.util.ArrayList;
-
 /**
  * Represents an image in the AST.
  * 
@@ -76,155 +74,44 @@ public class ImageTag extends AbstractTag {
 		super(parent);
 	}
 
-	@Override
-	public void render(StringBuilder b) {
-		ArrayList<String> outerDivClasses = new ArrayList<String>();
-
-		// Process parameters
-		if (type == TYPE_THUMB) {
-			outerDivClasses.add("thumbouter");
-			resize = true;
-		} else if (type == TYPE_FRAME) {
-			resize = false;
-			addClass("frameimage");
-			outerDivClasses.add("frameouter");
-		} else if (type == TYPE_NULL) {
-			resize = false;
-			border = false;
-			if (alt.isEmpty()) {
-				alt = caption;
-			}
-		} else if (type == TYPE_FRAMELESS) {
-			outerDivClasses.add("framelessouter");
-			resize = true;
-		}
-
-		if (border) {
-			outerDivClasses.add("imageborder");
-		}
-
-		if (!alt.isEmpty()) {
-			addAttribute("alt", alt);
-		}
-
-		if (location == LOCATION_RIGHT) {
-			outerDivClasses.add("imageright");
-		} else if (location == LOCATION_LEFT) {
-			outerDivClasses.add("imageleft");
-		} else if (location == LOCATION_CENTER) {
-			outerDivClasses.add("imagecenter");
-		} else if (location == LOCATION_NONE) {
-			outerDivClasses.add("imagenone");
-		}
-
-		// TODO Implement vertical alignment
-
-		if (resize) {
-			if (upright && (type == TYPE_THUMB || type == TYPE_FRAMELESS)) {
-				if (uprightFactor > 0) {
-					addAttribute("width", (uprightFactor * 100) + "%");
-					// addAttribute("height", (uprightFactor * 100) + "%");
-				} else {
-					addAttribute("width", "75%");
-					// addAttribute("height", "75%");
-				}
-			} else if (!upright
-					&& (type == TYPE_THUMB || type == TYPE_FRAMELESS)) {
-				if (width != 0) {
-					addAttribute("width", String.valueOf(width));
-				}
-
-				if (height != 0) {
-					addAttribute("height", String.valueOf(height));
-				}
-
-				if (width == 0 && height == 0) {
-					if (type == TYPE_THUMB) {
-						addAttribute("width", "220");
-						addClass("thumbimage");
-					} else {
-						addAttribute("width", "220");
-						addClass("framelessimage");
-					}
-				}
-			}
-		}
-
-		b.append("<div wikitype=\"image\" wikitext=\"" + wikitext + "\"");
-		if (!outerDivClasses.isEmpty()) {
-			b.append(" class=\"");
-			for (String c : outerDivClasses) {
-				b.append(c + " ");
-			}
-			b.append("\"");
-		}
-		/*
-		 * if (begin != null) { b.append(" wikitext-begin=\"" +
-		 * String.valueOf(begin) + "\""); }
-		 * 
-		 * if (end != null) { b.append(" wikitext-end=\"" + String.valueOf(end)
-		 * + "\""); }
-		 */
-
-		b.append(">");
-
-		if (enableLink) {
-			b.append("<a class=\"imagelink\" href=\"" + link + "\">");
-		}
-
-		// Start tag
-		openTag(b);
-
-		// End tag
-		closeTag(b);
-
-		if (enableLink) {
-			b.append("</a>");
-		}
-
-		if ((type == TYPE_THUMB || type == TYPE_FRAME) && !caption.isEmpty()) {
-			b.append("<div wikitype=\"image-caption\" class=\"imagecaption\">");
-			renderChildren(b);
-			b.append("</div>");
-		}
-
-		b.append("</div>");
-	}
-
-	@Override
-	public void openTag(StringBuilder b) {
-		b.append("<img");
-
-		// Add attributes
-		renderAttributes(b);
-
-		// Add CSS classes
-		renderCssClasses(b);
-	}
-
-	@Override
-	public void closeTag(StringBuilder b) {
-		b.append(" />");
-	}
-
 	public void setCaption(String caption) {
 		this.caption = caption;
+	}
+
+	public String getCaption() {
+		return caption;
 	}
 
 	public void setAlt(String alt) {
 		this.alt = alt;
 	}
 
+	public String getAlt() {
+		return alt;
+	}
+
 	public void setType(int type) {
 		this.type = type;
+	}
+
+	public int getType() {
+		return type;
 	}
 
 	public void setBorder(boolean border) {
 		this.border = border;
 	}
 
+	public boolean getBorder() {
+		return border;
+	}
+
 	public void setLocation(int location) {
 		this.location = location;
+	}
+
+	public int getLocation() {
+		return location;
 	}
 
 	public void setAlignment(int alignment) {
@@ -235,9 +122,17 @@ public class ImageTag extends AbstractTag {
 		this.resize = resize;
 	}
 
+	public boolean getResize() {
+		return resize;
+	}
+
 	public void setUpright(boolean upright) {
 		this.upright = upright;
 		this.resize = true;
+	}
+
+	public boolean getUpright() {
+		return upright;
 	}
 
 	public void setUprightFactor(float uprightFactor) {
@@ -246,9 +141,17 @@ public class ImageTag extends AbstractTag {
 		this.resize = true;
 	}
 
+	public float getUprightFactor() {
+		return uprightFactor;
+	}
+
 	public void setWidth(int width) {
 		this.width = width;
 		this.resize = true;
+	}
+
+	public int getWidth() {
+		return width;
 	}
 
 	public void setHeight(int height) {
@@ -256,17 +159,29 @@ public class ImageTag extends AbstractTag {
 		this.resize = true;
 	}
 
+	public int getHeight() {
+		return height;
+	}
+
 	public void setEnableLink(boolean enableLink) {
 		this.enableLink = enableLink;
+	}
+
+	public boolean getEnableLink() {
+		return enableLink;
 	}
 
 	public void setLink(String link) {
 		this.link = link;
 		this.enableLink = true;
 	}
-	
-    public void accept(TagVisitor visitor) {
-        visitor.visit(this);
-    }	
+
+	public String getLink() {
+		return link;
+	}
+
+	public void accept(TagVisitor visitor) {
+		visitor.visit(this);
+	}
 
 }

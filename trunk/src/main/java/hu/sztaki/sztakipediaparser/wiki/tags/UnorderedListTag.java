@@ -44,36 +44,6 @@ public class UnorderedListTag extends AbstractTag {
 		super(parent);
 	}
 
-	@Override
-	public void render(StringBuilder b) {
-		// TODO Set attributes and css classes of <li> tag.
-		if (wrap) {
-			b.append("<li>");
-		}
-
-		openTag(b);
-		renderChildren(b);
-		closeTag(b);
-
-		if (wrap) {
-			b.append("</li>");
-		}
-	}
-
-	@Override
-	public void openTag(StringBuilder b) {
-
-		b.append("<ul");
-		renderAttributes(b);
-		renderCssClasses(b);
-		b.append(">");
-	}
-
-	@Override
-	public void closeTag(StringBuilder b) {
-		b.append("</ul>");
-	}
-
 	public boolean getWrap() {
 		return wrap;
 	}
@@ -81,9 +51,9 @@ public class UnorderedListTag extends AbstractTag {
 	public void setWrap(boolean wrap) {
 		this.wrap = wrap;
 	}
-	
-    public void accept(TagVisitor visitor) {
-        visitor.visit(this);
-    }	
+
+	public void accept(TagVisitor visitor) {
+		visitor.visit(this);
+	}
 
 }

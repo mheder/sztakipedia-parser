@@ -40,38 +40,8 @@ public class DivTag extends AbstractTag {
 		super(parent);
 	}
 
-	@Override
-	public void render(StringBuilder b) {
-		// Start tag
-		openTag(b);
-
-		// Render children
-		renderChildren(b);
-
-		// End tag
-		closeTag(b);
+	public void accept(TagVisitor visitor) {
+		visitor.visit(this);
 	}
-
-	@Override
-	public void openTag(StringBuilder b) {
-		b.append("<div");
-
-		// Add attributes
-		renderAttributes(b);
-
-		// Add CSS classes
-		renderCssClasses(b);
-
-		b.append(">");
-	}
-
-	@Override
-	public void closeTag(StringBuilder b) {
-		b.append("</div>");
-	}
-	
-    public void accept(TagVisitor visitor) {
-        visitor.visit(this);
-    }	
 
 }

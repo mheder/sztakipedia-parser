@@ -32,9 +32,9 @@ import hu.sztaki.sztakipediaparser.wiki.visitor.TagVisitor;
  */
 public class IndentTag extends AbstractTag {
 	private int level = 1;
-	private static int LEVEL1 = 3;
-	private static int LEVEL2 = 6;
-	private static int LEVEL3 = 9;
+	public static int LEVEL1 = 3;
+	public static int LEVEL2 = 6;
+	public static int LEVEL3 = 9;
 
 	public IndentTag() {
 		super();
@@ -44,42 +44,6 @@ public class IndentTag extends AbstractTag {
 		super(parent);
 	}
 
-	@Override
-	public void render(StringBuilder b) {
-		openTag(b);
-	}
-
-	@Override
-	public void openTag(StringBuilder b) {
-		b.append("\n<br/>");
-		switch (level) {
-		case 1:
-			for (int i = 0; i < LEVEL1; i++) {
-				b.append("&nbsp;");
-			}
-			break;
-		case 2:
-			for (int i = 0; i < LEVEL2; i++) {
-				b.append("&nbsp;");
-			}
-			break;
-		case 3:
-			for (int i = 0; i < LEVEL3; i++) {
-				b.append("&nbsp;");
-			}
-			break;
-		default:
-			for (int i = 0; i < LEVEL1; i++) {
-				b.append("&nbsp;");
-			}
-			break;
-		}
-	}
-
-	@Override
-	public void closeTag(StringBuilder b) {
-	}
-
 	public int getLevel() {
 		return level;
 	}
@@ -87,9 +51,9 @@ public class IndentTag extends AbstractTag {
 	public void setLeveL(int level) {
 		this.level = level;
 	}
-	
-    public void accept(TagVisitor visitor) {
-        visitor.visit(this);
-    }	
+
+	public void accept(TagVisitor visitor) {
+		visitor.visit(this);
+	}
 
 }

@@ -46,31 +46,12 @@ public class TableColHeadingTag extends AbstractTag {
 		this.params = params;
 	}
 
-	@Override
-	public void render(StringBuilder b) {
-		openTag(b);
-		renderChildren(b);
-		closeTag(b);
+	public String getParams() {
+		return params;
 	}
 
-	@Override
-	public void openTag(StringBuilder b) {
-		b.append("<th");
-		renderCssClasses(b);
-		renderAttributes(b);
-		if (params != null && !params.isEmpty()) {
-			b.append(" " + params);
-		}
-		b.append(">");
+	public void accept(TagVisitor visitor) {
+		visitor.visit(this);
 	}
 
-	@Override
-	public void closeTag(StringBuilder b) {
-		b.append("</th>");
-	}
-	
-    public void accept(TagVisitor visitor) {
-        visitor.visit(this);
-    }	
-	
 }

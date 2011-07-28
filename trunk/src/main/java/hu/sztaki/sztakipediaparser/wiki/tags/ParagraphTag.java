@@ -40,32 +40,8 @@ public class ParagraphTag extends AbstractTag {
 		super(parent);
 	}
 
-	@Override
-	public void render(StringBuilder b) {
-		openTag(b);
-
-		renderChildren(b);
-
-		closeTag(b);
+	public void accept(TagVisitor visitor) {
+		visitor.visit(this);
 	}
-
-	@Override
-	public void openTag(StringBuilder b) {
-		b.append("<p");
-
-		renderCssClasses(b);
-		renderAttributes(b);
-
-		b.append(">");
-	}
-
-	@Override
-	public void closeTag(StringBuilder b) {
-		b.append("</p>");
-	}
-	
-    public void accept(TagVisitor visitor) {
-        visitor.visit(this);
-    }	
 
 }

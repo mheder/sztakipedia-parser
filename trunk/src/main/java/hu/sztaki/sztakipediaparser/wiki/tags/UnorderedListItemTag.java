@@ -40,28 +40,8 @@ public class UnorderedListItemTag extends AbstractTag {
 		super(parent);
 	}
 
-	@Override
-	public void render(StringBuilder b) {
-		openTag(b);
-		renderChildren(b);
-		closeTag(b);
+	public void accept(TagVisitor visitor) {
+		visitor.visit(this);
 	}
-
-	@Override
-	public void openTag(StringBuilder b) {
-		b.append("<li");
-		renderAttributes(b);
-		renderCssClasses(b);
-		b.append(">");
-	}
-
-	@Override
-	public void closeTag(StringBuilder b) {
-		b.append("</li>");
-	}
-	
-    public void accept(TagVisitor visitor) {
-        visitor.visit(this);
-    }	
 
 }
