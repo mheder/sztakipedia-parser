@@ -1088,4 +1088,20 @@ public class DefaultWikiInterpreter implements IWikiInterpreter {
 	public boolean getStoreBeginEnd() {
 		return setBeginEnd;
 	}
+
+	public void setPreprocess(boolean preprocess) {
+		this.preprocess = preprocess;
+	}
+
+	public void setPostprocess(boolean postprocess) {
+		this.postprocess = postprocess;
+	}
+
+	public void setAutoLink(boolean autoLink) {
+		this.autoLink = autoLink;
+	}
+
+	public void setBeginEnd(boolean setBeginEnd) {
+		this.setBeginEnd = setBeginEnd;
+	}
 }
