@@ -36,17 +36,18 @@ import hu.sztaki.sztakipediaparser.wiki.tags.ItalicTag;
 import hu.sztaki.sztakipediaparser.wiki.tags.ParagraphTag;
 import hu.sztaki.sztakipediaparser.wiki.tags.RawWikiTag;
 import hu.sztaki.sztakipediaparser.wiki.tags.ReferenceTag;
-import hu.sztaki.sztakipediaparser.wiki.tags.Tag;
-import hu.sztaki.sztakipediaparser.wiki.tags.TextTag;
 import hu.sztaki.sztakipediaparser.wiki.tags.TableCaptionTag;
 import hu.sztaki.sztakipediaparser.wiki.tags.TableCellTag;
 import hu.sztaki.sztakipediaparser.wiki.tags.TableColHeadingTag;
 import hu.sztaki.sztakipediaparser.wiki.tags.TableRowHeadingTag;
 import hu.sztaki.sztakipediaparser.wiki.tags.TableRowTag;
 import hu.sztaki.sztakipediaparser.wiki.tags.TableTag;
+import hu.sztaki.sztakipediaparser.wiki.tags.Tag;
 import hu.sztaki.sztakipediaparser.wiki.tags.TemplateTag;
+import hu.sztaki.sztakipediaparser.wiki.tags.TextTag;
 import hu.sztaki.sztakipediaparser.wiki.tags.UnorderedListItemTag;
 import hu.sztaki.sztakipediaparser.wiki.tags.UnorderedListTag;
+import hu.sztaki.sztakipediaparser.wiki.visitor.html.HTMLVisitor;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -76,7 +77,7 @@ import java.util.Stack;
  *         href="http://sztaki.hu">MTA SZTAKI</a>
  * @since 2011
  */
-public class DefaultWikiConverter implements IWikiConverter {
+public class DefaultWikiInterpreter implements IWikiInterpreter {
 	/**************/
 	/*** Fields ***/
 	/**************/
@@ -190,7 +191,7 @@ public class DefaultWikiConverter implements IWikiConverter {
 	 * @throws MalformedURLException
 	 * @throws NoSuchAlgorithmException
 	 */
-	public DefaultWikiConverter() throws MalformedURLException, IOException,
+	public DefaultWikiInterpreter() throws MalformedURLException, IOException,
 			NoSuchAlgorithmException {
 		tagtree = new BodyTag();
 		locale = new Locale("en");
@@ -207,7 +208,7 @@ public class DefaultWikiConverter implements IWikiConverter {
 	 * @throws MalformedURLException
 	 * @throws NoSuchAlgorithmException
 	 */
-	public DefaultWikiConverter(Locale locale, String rootURL, String apiURL,
+	public DefaultWikiInterpreter(Locale locale, String rootURL, String apiURL,
 			String mediaUrl) throws MalformedURLException, IOException,
 			NoSuchAlgorithmException {
 		tagtree = new BodyTag();
@@ -234,7 +235,7 @@ public class DefaultWikiConverter implements IWikiConverter {
 		Tag parent = peekTagStack();
 		AnchorTag tag = new AnchorTag(parent);
 
-		url = ConverterUtils.trim(url);
+		url = InterpreterUtils.trim(url);
 		addCssClasses(tag);
 		tag.setPlainlink(plainlink);
 		tag.setWikitext(wikitext);
@@ -291,7 +292,7 @@ public class DefaultWikiConverter implements IWikiConverter {
 
 		tag.addAttribute("title", url);
 		String origurl = url;
-		url = ConverterUtils.trim(url);
+		url = InterpreterUtils.trim(url);
 		addCssClasses(tag);
 		tag.setWikitext(wikitext);
 		tag.addAttribute("href", rootURL + url);
@@ -455,8 +456,8 @@ public class DefaultWikiConverter implements IWikiConverter {
 	public void addTemplate(String str, boolean multiline) {
 		// Parse template string recursively with a new converter
 		try {
-			DefaultWikiConverter c = new DefaultWikiConverter(locale, rootURL,
-					apiURL, mediaUrl);
+			DefaultWikiInterpreter c = new DefaultWikiInterpreter(locale,
+					rootURL, apiURL, mediaUrl);
 			c.setUrlCounter(urlCounter);
 			c.setTemplateID(templateID);
 			for (Class<? extends Tag> key : cssClasses.keySet()) {
@@ -676,14 +677,18 @@ public class DefaultWikiConverter implements IWikiConverter {
 	}
 
 	public void render(StringBuilder b, boolean renderBodyTag) {
+		HTMLVisitor v = new HTMLVisitor();
 		if (renderBodyTag) {
-			tagtree.render(b);
+			tagtree.accept(v);
+			// tagtree.render(b);
 		} else {
 			List<Tag> children = tagtree.getChildren();
 			for (Tag c : children) {
-				c.render(b);
+				c.accept(v);
+				// c.render(b);
 			}
 		}
+		b.append(v.getHTML());
 	}
 
 	public void reset() {
@@ -719,8 +724,7 @@ public class DefaultWikiConverter implements IWikiConverter {
 	 * @param wikitext
 	 *            Original wikitext.
 	 */
-	private void addImageTag(String url, List<String> params,
-			String wikitext) {
+	private void addImageTag(String url, List<String> params, String wikitext) {
 		String realUrl = "";
 
 		// Special cases
@@ -767,7 +771,7 @@ public class DefaultWikiConverter implements IWikiConverter {
 				"_");
 		try {
 			md.update(filename.getBytes("UTF-8"));
-			String digest = ConverterUtils.byteArray2Hex(md.digest());
+			String digest = InterpreterUtils.byteArray2Hex(md.digest());
 			realUrl = mediaUrl + digest.charAt(0) + "/" + digest.charAt(0)
 					+ digest.charAt(1) + "/"
 					+ URLEncoder.encode(filename, "UTF-8");
@@ -983,7 +987,7 @@ public class DefaultWikiConverter implements IWikiConverter {
 								node.addChild(tag);
 							} else if (!parts[i].isEmpty()) {
 								// URL
-								// TODO Create an URLTag instead of TemplateTag								
+								// TODO Create an URLTag instead of TemplateTag
 								TemplateTag tag = new TemplateTag(node, false);
 								tag.setName("URL");
 								tag.addClass("wiki-template");

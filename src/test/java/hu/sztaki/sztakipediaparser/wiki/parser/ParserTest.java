@@ -22,8 +22,8 @@
 package hu.sztaki.sztakipediaparser.wiki.parser;
 
 import static org.junit.Assert.assertTrue;
-import hu.sztaki.sztakipediaparser.wiki.converter.DefaultWikiConverter;
-import hu.sztaki.sztakipediaparser.wiki.converter.IWikiConverter;
+import hu.sztaki.sztakipediaparser.wiki.converter.DefaultWikiInterpreter;
+import hu.sztaki.sztakipediaparser.wiki.converter.IWikiInterpreter;
 import hu.sztaki.sztakipediaparser.wiki.tags.AnchorTag;
 
 import java.util.ArrayList;
@@ -40,7 +40,7 @@ import org.junit.Test;
  */
 public class ParserTest {
 	private Parser parser;
-	private IWikiConverter converter;
+	private IWikiInterpreter converter;
 
 	// Input Fixtures
 	private String Test1Input = "[http://www.sztaki.hu SZTAKI]";
@@ -239,7 +239,7 @@ public class ParserTest {
 
 	@Test
 	public void Test1() throws Exception {
-		converter = new DefaultWikiConverter();
+		converter = new DefaultWikiInterpreter();
 		parser = new Parser(converter);
 
 		// Setup converter
@@ -254,7 +254,7 @@ public class ParserTest {
 
 	@Test
 	public void Test2() throws Exception {
-		converter = new DefaultWikiConverter();
+		converter = new DefaultWikiInterpreter();
 		parser = new Parser(converter);
 
 		String html = parser.parse(Test2Input);
@@ -263,7 +263,7 @@ public class ParserTest {
 
 	@Test
 	public void Test3() throws Exception {
-		converter = new DefaultWikiConverter();
+		converter = new DefaultWikiInterpreter();
 		parser = new Parser(converter);
 
 		// Setup converter
@@ -278,7 +278,7 @@ public class ParserTest {
 
 	@Test
 	public void Test4() throws Exception {
-		converter = new DefaultWikiConverter();
+		converter = new DefaultWikiInterpreter();
 		parser = new Parser(converter);
 
 		String html = parser.parse(Test4Input);
@@ -287,7 +287,7 @@ public class ParserTest {
 
 	@Test
 	public void Test5() throws Exception {
-		converter = new DefaultWikiConverter();
+		converter = new DefaultWikiInterpreter();
 		parser = new Parser(converter);
 
 		String html = parser.parse(Test5Input);
@@ -296,7 +296,7 @@ public class ParserTest {
 
 	@Test
 	public void Test6() throws Exception {
-		converter = new DefaultWikiConverter();
+		converter = new DefaultWikiInterpreter();
 		parser = new Parser(converter);
 
 		String html = parser.parse(Test6Input);
@@ -305,7 +305,7 @@ public class ParserTest {
 
 	@Test
 	public void Test7() throws Exception {
-		converter = new DefaultWikiConverter();
+		converter = new DefaultWikiInterpreter();
 		parser = new Parser(converter);
 
 		String html = parser.parse(Test7Input);
@@ -314,7 +314,7 @@ public class ParserTest {
 
 	@Test
 	public void Test8() throws Exception {
-		converter = new DefaultWikiConverter();
+		converter = new DefaultWikiInterpreter();
 		parser = new Parser(converter);
 
 		String html = parser.parse(Test8Input);
@@ -323,7 +323,7 @@ public class ParserTest {
 
 	@Test
 	public void Test9() throws Exception {
-		converter = new DefaultWikiConverter();
+		converter = new DefaultWikiInterpreter();
 		parser = new Parser(converter);
 
 		String html = parser.parse(Test9Input);
@@ -332,7 +332,7 @@ public class ParserTest {
 
 	@Test
 	public void Test10() throws Exception {
-		converter = new DefaultWikiConverter();
+		converter = new DefaultWikiInterpreter();
 		parser = new Parser(converter);
 
 		String html = parser.parse(Test10Input);
@@ -341,7 +341,7 @@ public class ParserTest {
 
 	@Test
 	public void Test11() throws Exception {
-		converter = new DefaultWikiConverter();
+		converter = new DefaultWikiInterpreter();
 		parser = new Parser(converter);
 
 		String html = parser.parse(Test11Input);
@@ -350,7 +350,7 @@ public class ParserTest {
 
 	@Test
 	public void Test12() throws Exception {
-		converter = new DefaultWikiConverter();
+		converter = new DefaultWikiInterpreter();
 		parser = new Parser(converter);
 
 		String html = parser.parse(Test12Input);
@@ -359,7 +359,7 @@ public class ParserTest {
 
 	@Test
 	public void Test13() throws Exception {
-		converter = new DefaultWikiConverter();
+		converter = new DefaultWikiInterpreter();
 		parser = new Parser(converter);
 
 		String html = parser.parse(Test13Input);
@@ -368,7 +368,7 @@ public class ParserTest {
 
 	@Test
 	public void Test14() throws Exception {
-		converter = new DefaultWikiConverter();
+		converter = new DefaultWikiInterpreter();
 		parser = new Parser(converter);
 
 		String html = parser.parse(Test14Input);
@@ -377,7 +377,7 @@ public class ParserTest {
 
 	@Test
 	public void Test15() throws Exception {
-		converter = new DefaultWikiConverter();
+		converter = new DefaultWikiInterpreter();
 		parser = new Parser(converter);
 
 		String html = parser.parse(Test15Input);
@@ -386,7 +386,7 @@ public class ParserTest {
 
 	@Test
 	public void Test16() throws Exception {
-		converter = new DefaultWikiConverter();
+		converter = new DefaultWikiInterpreter();
 		parser = new Parser(converter);
 
 		String html = parser.parse(Test16Input);
@@ -395,7 +395,7 @@ public class ParserTest {
 
 	@Test
 	public void Test17() throws Exception {
-		converter = new DefaultWikiConverter();
+		converter = new DefaultWikiInterpreter();
 		parser = new Parser(converter);
 
 		String html = parser.parse(Test17Input);
@@ -404,7 +404,7 @@ public class ParserTest {
 
 	@Test
 	public void Test18() throws Exception {
-		converter = new DefaultWikiConverter();
+		converter = new DefaultWikiInterpreter();
 		parser = new Parser(converter);
 
 		String html = parser.parse(Test18Input);
@@ -413,7 +413,7 @@ public class ParserTest {
 
 	@Test
 	public void Test19() throws Exception {
-		converter = new DefaultWikiConverter();
+		converter = new DefaultWikiInterpreter();
 		parser = new Parser(converter);
 
 		String html = parser.parse(Test19Input);
@@ -422,7 +422,7 @@ public class ParserTest {
 
 	@Test
 	public void Test20() throws Exception {
-		converter = new DefaultWikiConverter();
+		converter = new DefaultWikiInterpreter();
 		parser = new Parser(converter);
 
 		String html = parser.parse(Test20Input);
@@ -431,7 +431,7 @@ public class ParserTest {
 
 	@Test
 	public void Test21() throws Exception {
-		converter = new DefaultWikiConverter();
+		converter = new DefaultWikiInterpreter();
 		parser = new Parser(converter);
 
 		String html = parser.parse(Test21Input);
@@ -440,7 +440,7 @@ public class ParserTest {
 
 	@Test
 	public void Test22() throws Exception {
-		converter = new DefaultWikiConverter();
+		converter = new DefaultWikiInterpreter();
 		parser = new Parser(converter);
 
 		String html = parser.parse(Test22Input);

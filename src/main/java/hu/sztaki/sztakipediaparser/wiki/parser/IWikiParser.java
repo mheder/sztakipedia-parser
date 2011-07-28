@@ -21,7 +21,7 @@
  */
 package hu.sztaki.sztakipediaparser.wiki.parser;
 
-import hu.sztaki.sztakipediaparser.wiki.converter.IWikiConverter;
+import hu.sztaki.sztakipediaparser.wiki.converter.IWikiInterpreter;
 
 /**
  * Interface for the parser.
@@ -36,5 +36,5 @@ public interface IWikiParser {
 	 * 
 	 * @param c
 	 */
-	public void parse(IWikiConverter c);
+	public void parse(IWikiInterpreter c);
 }

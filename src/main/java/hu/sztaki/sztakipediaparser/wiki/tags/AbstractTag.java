@@ -178,27 +178,6 @@ public abstract class AbstractTag implements Tag {
 	}
 
 	/**
-	 * Render the appropriate html code string.
-	 * 
-	 * @return
-	 */
-	public abstract void render(StringBuilder b);
-
-	/**
-	 * Render the opening part of the HTML tag, like <div>
-	 * 
-	 * @param b
-	 */
-	public abstract void openTag(StringBuilder b);
-
-	/**
-	 * Render the closing part of the HTML tag, like </div>
-	 * 
-	 * @param b
-	 */
-	public abstract void closeTag(StringBuilder b);
-
-	/**
 	 * Render the HTML of the tag's attributes.
 	 * 
 	 * @param b
@@ -227,19 +206,6 @@ public abstract class AbstractTag implements Tag {
 				}
 			}
 			b.append("\"");
-		}
-	}
-
-	/**
-	 * Render all children nodes of this node.
-	 * 
-	 * @param b
-	 * @deprecated Move rendering code to separate class according to <em>Visitor</em> pattern
-	 */
-	@Deprecated
-	public void renderChildren(StringBuilder b) {
-		for (Tag c : children) {
-			c.render(b);
 		}
 	}
 

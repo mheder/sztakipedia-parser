@@ -44,44 +44,6 @@ public class HeadingTag extends AbstractTag {
 		super(parent);
 	}
 
-	@Override
-	public void render(StringBuilder b) {
-		switch (level) {
-		case 1:
-			addClass("section-heading");
-			break;
-		case 2:
-			addClass("subsection-heading");
-			break;
-		case 3:
-			addClass("sub-subsection-heading");
-			break;
-		default:
-			addClass("sub-subsection-heading");
-		}
-
-		openTag(b);
-
-		renderChildren(b);
-
-		closeTag(b);
-	}
-
-	@Override
-	public void openTag(StringBuilder b) {
-		b.append("<div");
-
-		renderCssClasses(b);
-		renderAttributes(b);
-
-		b.append(">");
-	}
-
-	@Override
-	public void closeTag(StringBuilder b) {
-		b.append("</div>");
-	}
-
 	public int getLevel() {
 		return level;
 	}
@@ -89,9 +51,9 @@ public class HeadingTag extends AbstractTag {
 	public void setLevel(int level) {
 		this.level = level;
 	}
-	
-    public void accept(TagVisitor visitor) {
-        visitor.visit(this);
-    }	
+
+	public void accept(TagVisitor visitor) {
+		visitor.visit(this);
+	}
 
 }

@@ -50,35 +50,6 @@ public class TextTag extends AbstractTag {
 		this.content = content;
 	}
 
-	/***************/
-	/*** Methods ***/
-	/***************/
-
-	@Override
-	public void render(StringBuilder b) {
-		addBeginEndAttr();
-		openTag(b);
-		b.append(content);
-		closeTag(b);
-		renderChildren(b);
-	}
-
-	@Override
-	public void openTag(StringBuilder b) {
-		if (!attributes.isEmpty()) {
-			b.append("<span");
-			renderAttributes(b);
-			b.append(">");
-		}
-	}
-
-	@Override
-	public void closeTag(StringBuilder b) {
-		if (!attributes.isEmpty()) {
-			b.append("</span>");
-		}
-	}
-
 	/***************************/
 	/*** Getters and Setters ***/
 	/***************************/
@@ -90,9 +61,9 @@ public class TextTag extends AbstractTag {
 	public void setContent(String content) {
 		this.content = content;
 	}
-	
-    public void accept(TagVisitor visitor) {
-        visitor.visit(this);
-    }	
+
+	public void accept(TagVisitor visitor) {
+		visitor.visit(this);
+	}
 
 }

@@ -40,30 +40,8 @@ public class HRTag extends AbstractTag {
 		super(parent);
 	}
 
-	@Override
-	public void render(StringBuilder b) {
-		// addBeginEndAttr();
-
-		openTag(b);
-
-		closeTag(b);
+	public void accept(TagVisitor visitor) {
+		visitor.visit(this);
 	}
-
-	@Override
-	public void openTag(StringBuilder b) {
-		b.append("<hr");
-
-		renderCssClasses(b);
-		renderAttributes(b);
-	}
-
-	@Override
-	public void closeTag(StringBuilder b) {
-		b.append(" />");
-	}
-	
-    public void accept(TagVisitor visitor) {
-        visitor.visit(this);
-    }	
 
 }

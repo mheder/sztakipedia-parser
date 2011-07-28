@@ -68,33 +68,6 @@ public class TemplateTag extends AbstractTag {
 		this.multiline = multiline;
 	}
 
-	@Override
-	public void render(StringBuilder b) {
-		// addBeginEndAttr();
-		openTag(b);
-		b.append("<div class=\"wiki-template-params\">");
-		for (TemplateParam param : parameters) {
-			param.render(b);
-		}
-		b.append("</div>");
-		closeTag(b);
-	}
-
-	@Override
-	public void openTag(StringBuilder b) {
-		b.append("<div onclick=\"edit_wiki_template(this)\" "
-				+ "onmouseover=\"show_wiki_template(this)\"");
-		renderAttributes(b);
-		renderCssClasses(b);
-		b.append(">");
-		b.append("<span class=\"wiki-template-title\">" + name + "</span>");
-	}
-
-	@Override
-	public void closeTag(StringBuilder b) {
-		b.append("</div>");
-	}
-
 	/**
 	 * Adds a template parameter.
 	 * 
@@ -110,6 +83,10 @@ public class TemplateTag extends AbstractTag {
 					squeeze(value), implicit);
 			parameters.add(param);
 		}
+	}
+
+	public ArrayList<TemplateParam> getParameters() {
+		return parameters;
 	}
 
 	public String getName() {
@@ -144,9 +121,9 @@ public class TemplateTag extends AbstractTag {
 	private String squeeze(String str) {
 		return str.replaceAll("( |\\t)+", " ").trim();
 	}
-	
-    public void accept(TagVisitor visitor) {
-        visitor.visit(this);
-    }	
+
+	public void accept(TagVisitor visitor) {
+		visitor.visit(this);
+	}
 
 }

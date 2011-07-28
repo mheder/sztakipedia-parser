@@ -38,7 +38,7 @@ import java.util.List;
  *         href="http://sztaki.hu">MTA SZTAKI</a>
  * @since 2011
  */
-public interface IWikiConverter {
+public interface IWikiInterpreter {
 	/**
 	 * Appends an external link to the output buffer. See <a
 	 * href="http://en.wikipedia.org/wiki/Help:Wiki_markup#Links_and_URLs">Links

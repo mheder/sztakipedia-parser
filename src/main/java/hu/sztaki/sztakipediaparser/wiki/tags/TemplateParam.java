@@ -46,18 +46,6 @@ public class TemplateParam {
 		this.implicit = implicit;
 	}
 
-	public void render(StringBuilder b) {
-		b.append("<div class=\"wiki-template-param\">");
-		b.append("<span class=\"wiki-template-param-key");
-		if (implicit) {
-			b.append(" implicit");
-		}
-		b.append("\">" + name + "</span>");
-		b.append("<span class=\"wiki-template-param-value\">" + value
-				+ "</span>");
-		b.append("</div>");
-	}
-
 	public String getName() {
 		return name;
 	}
