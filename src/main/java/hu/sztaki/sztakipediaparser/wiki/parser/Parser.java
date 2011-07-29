@@ -21,9 +21,9 @@
  */
 package hu.sztaki.sztakipediaparser.wiki.parser;
 
-import hu.sztaki.sztakipediaparser.wiki.converter.InterpreterUtils;
 import hu.sztaki.sztakipediaparser.wiki.converter.DefaultWikiInterpreter;
 import hu.sztaki.sztakipediaparser.wiki.converter.IWikiInterpreter;
+import hu.sztaki.sztakipediaparser.wiki.converter.InterpreterUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -80,7 +80,6 @@ public class Parser {
 
 		// Parse each section with JavaCCWikiParser
 		for (int i = 0; i < sections.length; i++) {
-			// newlines = 0;
 			if (!sections[i].isEmpty()) {
 				c.reset();
 				// Replace lost newlines
@@ -120,7 +119,7 @@ public class Parser {
 		System.out.println("Input read in "
 				+ (System.currentTimeMillis() - time) + " ms.");
 
-		// Create converter
+		// Create interpreter
 		IWikiInterpreter c = new DefaultWikiInterpreter();
 
 		// Create parser

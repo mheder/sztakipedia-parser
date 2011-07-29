@@ -699,6 +699,9 @@ public class DefaultWikiInterpreter implements IWikiInterpreter {
 		if (css == null || C == null)
 			return;
 
+		List<String> classes = new ArrayList<String>();
+		classes.add("container");
+
 		String[] oldCss = cssClasses.get(C);
 		if (oldCss != null) {
 			for (int i = 0; i < oldCss.length; i++) {
