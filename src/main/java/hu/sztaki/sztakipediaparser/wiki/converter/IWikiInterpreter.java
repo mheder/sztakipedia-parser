@@ -21,7 +21,6 @@
  */
 package hu.sztaki.sztakipediaparser.wiki.converter;
 
-import hu.sztaki.sztakipediaparser.wiki.tags.AbstractTag;
 import hu.sztaki.sztakipediaparser.wiki.tags.Tag;
 
 import java.util.List;
@@ -116,7 +115,8 @@ public interface IWikiInterpreter {
 	public void endSectionHeading();
 
 	/**
-	 * Mark the start of a subsection heading, ie. <code>===Subsection Heading===</code>
+	 * Mark the start of a subsection heading, ie.
+	 * <code>===Subsection Heading===</code>
 	 * 
 	 * @param wikitext
 	 */
@@ -267,7 +267,8 @@ public interface IWikiInterpreter {
 	 * Render the conversion output to the supplied StringBuilder.
 	 * 
 	 * @param b
-	 * @deprecated TODO Move rendering code to separate class according to <em>Visitor</em> pattern
+	 * @deprecated TODO Move rendering code to separate class according to
+	 *             <em>Visitor</em> pattern
 	 */
 	@Deprecated
 	public void render(StringBuilder b);
@@ -309,12 +310,10 @@ public interface IWikiInterpreter {
 	 * 
 	 * @param setBeginEnd
 	 */
-	public void setStoreBeginEnd(boolean storeBeginEnd);
+	public void setStoreBeginEnd(boolean setBeginEnd);
 
 	/**
 	 * Returns the value of the setBeginEnd postprocessor switch.
-	 * 
-	 * @param setBeginEnd
 	 */
 	public boolean getStoreBeginEnd();
 

@@ -36,16 +36,16 @@ import java.util.regex.Pattern;
  * @since 2011
  */
 public class InterpreterUtils {
-	
+
 	static final Pattern whitespaceLeftPattern;
 	static final Pattern whitespaceRightPattern;
-	
+
 	static {
 		final String whitespaceRegex = "[_ \t\r\n]";
-		whitespaceLeftPattern = Pattern.compile("^" + whitespaceRegex + "+");		
-		whitespaceRightPattern = Pattern.compile(whitespaceRegex + "+$");		
+		whitespaceLeftPattern = Pattern.compile("^" + whitespaceRegex + "+");
+		whitespaceRightPattern = Pattern.compile(whitespaceRegex + "+$");
 	}
-	
+
 	/**
 	 * Trims whitespace and underscore characters from both ends of the string.
 	 * 
@@ -62,7 +62,7 @@ public class InterpreterUtils {
 	 * Converts a hex byte array to string.
 	 * 
 	 * @param hash
-	 * @return
+	 * @return Hash value as a string.
 	 */
 	public static String byteArray2Hex(byte[] hash) {
 		Formatter formatter = new Formatter();
