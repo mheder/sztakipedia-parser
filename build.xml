@@ -25,6 +25,7 @@
     <property name="build.dir" value="${dist.dir}/classes" />
     <property name="build.sysclasspath" value="last"/>
     <property name="src.dir" value="src/main/java" />
+	<property name="res.dir" value="src/main/resources" />
     <property name="javadoc.dir" value="${docs.dir}/javadoc" />
     
     <!-- files -->
@@ -64,6 +65,7 @@
         <delete file="MANIFEST.MF"/>
         <jar jarfile="${dist.dir}/${jar.file}">
             <fileset dir="${build.dir}"/>
+        	<fileset dir="${res.dir}"  />
             <manifest>
                 <attribute name="Built-By" value="${user.name}"/>
                 <attribute name="Main-Class" value="${main.class}"/>
@@ -87,8 +89,10 @@
                 <include name="**/*.xml" />
                 <include name="**/LICENSE*" />
                 <include name="**/*.properties" />
+            	
             </fileset>
         </copy>
+  
     </target>
 
     <target name="clean">
