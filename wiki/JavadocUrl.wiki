@@ -1,0 +1,4 @@
+#summary Javadoc access url.
+
+= Javadoc access =
+You can browse the generated Javadoc [http://sztakipedia-parser.googlecode.com/svn/trunk/docs/javadoc/index.html here].
