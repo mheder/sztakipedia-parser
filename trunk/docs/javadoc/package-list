@@ -2,3 +2,5 @@ hu.sztaki.sztakipediaparser.localization
 hu.sztaki.sztakipediaparser.wiki.converter
 hu.sztaki.sztakipediaparser.wiki.parser
 hu.sztaki.sztakipediaparser.wiki.tags
+hu.sztaki.sztakipediaparser.wiki.visitor
+hu.sztaki.sztakipediaparser.wiki.visitor.html

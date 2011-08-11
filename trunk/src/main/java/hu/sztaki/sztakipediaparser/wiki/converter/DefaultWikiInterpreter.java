@@ -676,16 +676,13 @@ public class DefaultWikiInterpreter implements IWikiInterpreter {
 		render(b, true);
 	}
 
-	public void render(StringBuilder b, boolean renderBodyTag) {
+	public void render(StringBuilder b, boolean visitRoot) {
 		HTMLVisitor v = new HTMLVisitor();
-		if (renderBodyTag) {
-			tagtree.accept(v);
-			// tagtree.render(b);
+		if (visitRoot) {
+			v.dispatchVisit(tagtree);
 		} else {
-			List<Tag> children = tagtree.getChildren();
-			for (Tag c : children) {
-				c.accept(v);
-				// c.render(b);
+			for (Tag c : tagtree.getChildren()) {
+				v.dispatchVisit(c);
 			}
 		}
 		b.append(v.getHTML());
