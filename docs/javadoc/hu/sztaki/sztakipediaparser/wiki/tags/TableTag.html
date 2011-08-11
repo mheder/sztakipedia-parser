@@ -54,7 +54,7 @@ function windowTitle()
 <TR>
 <TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
 &nbsp;<A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/TableRowTag.html" title="class in hu.sztaki.sztakipediaparser.wiki.tags"><B>PREV CLASS</B></A>&nbsp;
-&nbsp;<A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/TemplateParam.html" title="class in hu.sztaki.sztakipediaparser.wiki.tags"><B>NEXT CLASS</B></A></FONT></TD>
+&nbsp;<A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/Tag.html" title="interface in hu.sztaki.sztakipediaparser.wiki.tags"><B>NEXT CLASS</B></A></FONT></TD>
 <TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
   <A HREF="../../../../../index.html?hu/sztaki/sztakipediaparser/wiki/tags/TableTag.html" target="_top"><B>FRAMES</B></A>  &nbsp;
 &nbsp;<A HREF="TableTag.html" target="_top"><B>NO FRAMES</B></A>  &nbsp;
@@ -94,6 +94,9 @@ Class TableTag</H2>
   <IMG SRC="../../../../../resources/inherit.gif" ALT="extended by "><A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/AbstractTag.html" title="class in hu.sztaki.sztakipediaparser.wiki.tags">hu.sztaki.sztakipediaparser.wiki.tags.AbstractTag</A>
       <IMG SRC="../../../../../resources/inherit.gif" ALT="extended by "><B>hu.sztaki.sztakipediaparser.wiki.tags.TableTag</B>
 </PRE>
+<DL>
+<DT><B>All Implemented Interfaces:</B> <DD><A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/Tag.html" title="interface in hu.sztaki.sztakipediaparser.wiki.tags">Tag</A>, <A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/TreeNode.html" title="interface in hu.sztaki.sztakipediaparser.wiki.tags">TreeNode</A>&lt;<A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/Tag.html" title="interface in hu.sztaki.sztakipediaparser.wiki.tags">Tag</A>&gt;, <A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/visitor/Visitable.html" title="interface in hu.sztaki.sztakipediaparser.wiki.visitor">Visitable</A>&lt;<A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/visitor/TagVisitor.html" title="interface in hu.sztaki.sztakipediaparser.wiki.visitor">TagVisitor</A>,<A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/Tag.html" title="interface in hu.sztaki.sztakipediaparser.wiki.tags">Tag</A>&gt;</DD>
+</DL>
 <HR>
 <DL>
 <DT><PRE>public class <B>TableTag</B><DT>extends <A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/AbstractTag.html" title="class in hu.sztaki.sztakipediaparser.wiki.tags">AbstractTag</A></DL>
@@ -136,7 +139,7 @@ Represents a table in the AST.
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
-<TD><CODE><B><A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/TableTag.html#TableTag(hu.sztaki.sztakipediaparser.wiki.tags.AbstractTag, java.lang.String)">TableTag</A></B>(<A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/AbstractTag.html" title="class in hu.sztaki.sztakipediaparser.wiki.tags">AbstractTag</A>&nbsp;parent,
+<TD><CODE><B><A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/TableTag.html#TableTag(hu.sztaki.sztakipediaparser.wiki.tags.Tag, java.lang.String)">TableTag</A></B>(<A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/Tag.html" title="interface in hu.sztaki.sztakipediaparser.wiki.tags">Tag</A>&nbsp;parent,
          <A HREF="http://java.sun.com/j2se/1.5.0/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;params)</CODE>
 
 <BR>
@@ -155,10 +158,26 @@ Represents a table in the AST.
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
 <CODE>&nbsp;void</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/TableTag.html#render(java.lang.StringBuilder)">render</A></B>(<A HREF="http://java.sun.com/j2se/1.5.0/docs/api/java/lang/StringBuilder.html?is-external=true" title="class or interface in java.lang">StringBuilder</A>&nbsp;b)</CODE>
+<TD><CODE><B><A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/TableTag.html#accept(hu.sztaki.sztakipediaparser.wiki.visitor.TagVisitor)">accept</A></B>(<A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/visitor/TagVisitor.html" title="interface in hu.sztaki.sztakipediaparser.wiki.visitor">TagVisitor</A>&nbsp;visitor)</CODE>
 
 <BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Render the appropriate html code string.</TD>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/TableCaptionTag.html" title="class in hu.sztaki.sztakipediaparser.wiki.tags">TableCaptionTag</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/TableTag.html#getCaption()">getCaption</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;<A HREF="http://java.sun.com/j2se/1.5.0/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A></CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/TableTag.html#getParams()">getParams</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
@@ -183,7 +202,7 @@ Represents a table in the AST.
 <TH ALIGN="left"><B>Methods inherited from class hu.sztaki.sztakipediaparser.wiki.tags.<A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/AbstractTag.html" title="class in hu.sztaki.sztakipediaparser.wiki.tags">AbstractTag</A></B></TH>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
-<TD><CODE><A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/AbstractTag.html#addAttribute(java.lang.String, java.lang.String)">addAttribute</A>, <A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/AbstractTag.html#addChild(hu.sztaki.sztakipediaparser.wiki.tags.AbstractTag)">addChild</A>, <A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/AbstractTag.html#addChild(hu.sztaki.sztakipediaparser.wiki.tags.AbstractTag, int)">addChild</A>, <A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/AbstractTag.html#addClass(java.lang.String)">addClass</A>, <A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/AbstractTag.html#addClasses(java.util.ArrayList)">addClasses</A>, <A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/AbstractTag.html#getAttributes()">getAttributes</A>, <A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/AbstractTag.html#getBegin()">getBegin</A>, <A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/AbstractTag.html#getChildIndex(hu.sztaki.sztakipediaparser.wiki.tags.AbstractTag)">getChildIndex</A>, <A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/AbstractTag.html#getChildren()">getChildren</A>, <A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/AbstractTag.html#getClasses()">getClasses</A>, <A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/AbstractTag.html#getEnd()">getEnd</A>, <A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/AbstractTag.html#getParent()">getParent</A>, <A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/AbstractTag.html#getWikitext()">getWikitext</A>, <A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/AbstractTag.html#removeChild(hu.sztaki.sztakipediaparser.wiki.tags.AbstractTag)">removeChild</A>, <A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/AbstractTag.html#setBegin(int)">setBegin</A>, <A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/AbstractTag.html#setEnd(int)">setEnd</A>, <A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/AbstractTag.html#setWikitext(java.lang.String)">setWikitext</A></CODE></TD>
+<TD><CODE><A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/AbstractTag.html#addAttribute(java.lang.String, java.lang.String)">addAttribute</A>, <A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/AbstractTag.html#addBeginEndAttr()">addBeginEndAttr</A>, <A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/AbstractTag.html#addChild(hu.sztaki.sztakipediaparser.wiki.tags.Tag)">addChild</A>, <A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/AbstractTag.html#addChild(hu.sztaki.sztakipediaparser.wiki.tags.Tag, int)">addChild</A>, <A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/AbstractTag.html#addClass(java.lang.String)">addClass</A>, <A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/AbstractTag.html#addClasses(java.util.List)">addClasses</A>, <A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/AbstractTag.html#getAttributes()">getAttributes</A>, <A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/AbstractTag.html#getBegin()">getBegin</A>, <A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/AbstractTag.html#getChildIndex(hu.sztaki.sztakipediaparser.wiki.tags.Tag)">getChildIndex</A>, <A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/AbstractTag.html#getChildren()">getChildren</A>, <A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/AbstractTag.html#getClasses()">getClasses</A>, <A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/AbstractTag.html#getEnd()">getEnd</A>, <A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/AbstractTag.html#getParent()">getParent</A>, <A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/AbstractTag.html#getWikitext()">getWikitext</A>, <A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/AbstractTag.html#removeChild(hu.sztaki.sztakipediaparser.wiki.tags.Tag)">removeChild</A>, <A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/AbstractTag.html#renderAttributes(java.lang.StringBuilder)">renderAttributes</A>, <A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/AbstractTag.html#renderCssClasses(java.lang.StringBuilder)">renderCssClasses</A>, <A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/AbstractTag.html#setBegin(int)">setBegin</A>, <A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/AbstractTag.html#setEnd(int)">setEnd</A>, <A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/AbstractTag.html#setWikitext(java.lang.String)">setWikitext</A></CODE></TD>
 </TR>
 </TABLE>
 &nbsp;<A NAME="methods_inherited_from_class_java.lang.Object"><!-- --></A>
@@ -224,10 +243,10 @@ public <B>TableTag</B>(<A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/
 </DL>
 <HR>
 
-<A NAME="TableTag(hu.sztaki.sztakipediaparser.wiki.tags.AbstractTag, java.lang.String)"><!-- --></A><H3>
+<A NAME="TableTag(hu.sztaki.sztakipediaparser.wiki.tags.Tag, java.lang.String)"><!-- --></A><H3>
 TableTag</H3>
 <PRE>
-public <B>TableTag</B>(<A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/AbstractTag.html" title="class in hu.sztaki.sztakipediaparser.wiki.tags">AbstractTag</A>&nbsp;parent,
+public <B>TableTag</B>(<A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/Tag.html" title="interface in hu.sztaki.sztakipediaparser.wiki.tags">Tag</A>&nbsp;parent,
                 <A HREF="http://java.sun.com/j2se/1.5.0/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A>&nbsp;params)</PRE>
 <DL>
 </DL>
@@ -242,23 +261,6 @@ public <B>TableTag</B>(<A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/
 </TR>
 </TABLE>
 
-<A NAME="render(java.lang.StringBuilder)"><!-- --></A><H3>
-render</H3>
-<PRE>
-public void <B>render</B>(<A HREF="http://java.sun.com/j2se/1.5.0/docs/api/java/lang/StringBuilder.html?is-external=true" title="class or interface in java.lang">StringBuilder</A>&nbsp;b)</PRE>
-<DL>
-<DD><B>Description copied from class: <CODE><A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/AbstractTag.html#render(java.lang.StringBuilder)">AbstractTag</A></CODE></B></DD>
-<DD>Render the appropriate html code string.
-<P>
-<DD><DL>
-<DT><B>Specified by:</B><DD><CODE><A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/AbstractTag.html#render(java.lang.StringBuilder)">render</A></CODE> in class <CODE><A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/AbstractTag.html" title="class in hu.sztaki.sztakipediaparser.wiki.tags">AbstractTag</A></CODE></DL>
-</DD>
-<DD><DL>
-</DL>
-</DD>
-</DL>
-<HR>
-
 <A NAME="setParams(java.lang.String)"><!-- --></A><H3>
 setParams</H3>
 <PRE>
@@ -270,10 +272,43 @@ public void <B>setParams</B>(<A HREF="http://java.sun.com/j2se/1.5.0/docs/api/ja
 </DL>
 <HR>
 
+<A NAME="getParams()"><!-- --></A><H3>
+getParams</H3>
+<PRE>
+public <A HREF="http://java.sun.com/j2se/1.5.0/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</A> <B>getParams</B>()</PRE>
+<DL>
+<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
 <A NAME="setCaption(hu.sztaki.sztakipediaparser.wiki.tags.TableCaptionTag)"><!-- --></A><H3>
 setCaption</H3>
 <PRE>
 public void <B>setCaption</B>(<A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/TableCaptionTag.html" title="class in hu.sztaki.sztakipediaparser.wiki.tags">TableCaptionTag</A>&nbsp;caption)</PRE>
+<DL>
+<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="getCaption()"><!-- --></A><H3>
+getCaption</H3>
+<PRE>
+public <A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/TableCaptionTag.html" title="class in hu.sztaki.sztakipediaparser.wiki.tags">TableCaptionTag</A> <B>getCaption</B>()</PRE>
+<DL>
+<DD><DL>
+</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="accept(hu.sztaki.sztakipediaparser.wiki.visitor.TagVisitor)"><!-- --></A><H3>
+accept</H3>
+<PRE>
+public void <B>accept</B>(<A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/visitor/TagVisitor.html" title="interface in hu.sztaki.sztakipediaparser.wiki.visitor">TagVisitor</A>&nbsp;visitor)</PRE>
 <DL>
 <DD><DL>
 </DL>
@@ -311,7 +346,7 @@ public void <B>setCaption</B>(<A HREF="../../../../../hu/sztaki/sztakipediaparse
 <TR>
 <TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
 &nbsp;<A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/TableRowTag.html" title="class in hu.sztaki.sztakipediaparser.wiki.tags"><B>PREV CLASS</B></A>&nbsp;
-&nbsp;<A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/TemplateParam.html" title="class in hu.sztaki.sztakipediaparser.wiki.tags"><B>NEXT CLASS</B></A></FONT></TD>
+&nbsp;<A HREF="../../../../../hu/sztaki/sztakipediaparser/wiki/tags/Tag.html" title="interface in hu.sztaki.sztakipediaparser.wiki.tags"><B>NEXT CLASS</B></A></FONT></TD>
 <TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
   <A HREF="../../../../../index.html?hu/sztaki/sztakipediaparser/wiki/tags/TableTag.html" target="_top"><B>FRAMES</B></A>  &nbsp;
 &nbsp;<A HREF="TableTag.html" target="_top"><B>NO FRAMES</B></A>  &nbsp;

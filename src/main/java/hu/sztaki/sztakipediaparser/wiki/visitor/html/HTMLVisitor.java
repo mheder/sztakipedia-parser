@@ -48,6 +48,14 @@ import hu.sztaki.sztakipediaparser.wiki.visitor.TagVisitor;
 
 import java.util.ArrayList;
 
+/**
+ * Visitor to convert the wiki AST to Sztakipedia XHTML.
+ *  
+ * @note
+ * No template expansion takes place.
+ * 
+ * @author Tibor Olah
+ */
 public class HTMLVisitor implements TagVisitor {
 
 	final StringBuilder out;
@@ -63,7 +71,7 @@ public class HTMLVisitor implements TagVisitor {
 	private void visitChildren(Tag tag) {
 		if (tag.getChildren() != null)
 			for (Tag t : tag.getChildren())
-				t.accept(this);
+				dispatchVisit(t);
 	}
 
 	public void visit(AnchorTag tag) {
@@ -483,6 +491,11 @@ public class HTMLVisitor implements TagVisitor {
 		if (tag.getWrap()) {
 			out.append("</li>");
 		}
+	}
+
+	@Override
+	public void dispatchVisit(Tag visitable) {
+		visitable.accept(this);
 	}
 
 }

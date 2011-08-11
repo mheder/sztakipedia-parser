@@ -30,7 +30,7 @@ import hu.sztaki.sztakipediaparser.wiki.tags.*;
  * @author Illes Solt
  *
  */
-public interface TagVisitor {
+public interface TagVisitor extends Visitor<TagVisitor, Tag> {
 	void visit(AnchorTag tag);
 	void visit(BodyTag tag);
 	void visit(BoldTag tag);

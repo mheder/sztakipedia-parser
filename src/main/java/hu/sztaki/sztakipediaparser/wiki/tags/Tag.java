@@ -22,6 +22,7 @@
 package hu.sztaki.sztakipediaparser.wiki.tags;
 
 import hu.sztaki.sztakipediaparser.wiki.visitor.TagVisitor;
+import hu.sztaki.sztakipediaparser.wiki.visitor.Visitable;
 
 import java.util.List;
 import java.util.Map;
@@ -34,7 +35,7 @@ import java.util.Map;
  *         href="http://sztaki.hu">MTA SZTAKI</a>
  * @since 2011
  */
-public interface Tag extends TreeNode<Tag> {
+public interface Tag  extends TreeNode<Tag>, Visitable<TagVisitor, Tag> {
 
 	/***************/
 	/*** Methods ***/
@@ -106,5 +107,4 @@ public interface Tag extends TreeNode<Tag> {
 
 	public int getEnd();
 
-	public void accept(TagVisitor v);
 }
