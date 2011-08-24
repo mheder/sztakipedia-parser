@@ -24,6 +24,7 @@ package hu.sztaki.sztakipediaparser.wiki.parser;
 import hu.sztaki.sztakipediaparser.wiki.converter.DefaultWikiInterpreter;
 import hu.sztaki.sztakipediaparser.wiki.converter.IWikiInterpreter;
 import hu.sztaki.sztakipediaparser.wiki.converter.InterpreterUtils;
+import hu.sztaki.sztakipediaparser.wiki.parser.cc.JavaCCWikiParser;
 
 import java.io.File;
 import java.io.FileInputStream;
