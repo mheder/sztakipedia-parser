@@ -45,6 +45,7 @@ import hu.sztaki.sztakipediaparser.wiki.tags.TextTag;
 import hu.sztaki.sztakipediaparser.wiki.tags.UnorderedListItemTag;
 import hu.sztaki.sztakipediaparser.wiki.tags.UnorderedListTag;
 import hu.sztaki.sztakipediaparser.wiki.visitor.TagVisitor;
+import hu.sztaki.sztakipediaparser.wiki.visitor.Visitor;
 
 import java.util.ArrayList;
 
@@ -56,7 +57,7 @@ import java.util.ArrayList;
  * 
  * @author Tibor Olah
  */
-public class HTMLVisitor implements TagVisitor {
+public class HTMLVisitor implements TagVisitor, Visitor<TagVisitor, Tag> {
 
 	final StringBuilder out;
 
@@ -493,7 +494,6 @@ public class HTMLVisitor implements TagVisitor {
 		}
 	}
 
-	@Override
 	public void dispatchVisit(Tag visitable) {
 		visitable.accept(this);
 	}

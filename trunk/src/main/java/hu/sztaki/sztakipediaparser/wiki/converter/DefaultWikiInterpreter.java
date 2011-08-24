@@ -23,8 +23,8 @@ package hu.sztaki.sztakipediaparser.wiki.converter;
 
 import hu.sztaki.sztakipediaparser.localization.DefaultLanguageHandler;
 import hu.sztaki.sztakipediaparser.wiki.parser.IWikiParser;
-import hu.sztaki.sztakipediaparser.wiki.parser.JavaCCWikiParser;
 import hu.sztaki.sztakipediaparser.wiki.parser.Splitter;
+import hu.sztaki.sztakipediaparser.wiki.parser.cc.JavaCCWikiParser;
 import hu.sztaki.sztakipediaparser.wiki.tags.AnchorTag;
 import hu.sztaki.sztakipediaparser.wiki.tags.BodyTag;
 import hu.sztaki.sztakipediaparser.wiki.tags.BoldTag;
