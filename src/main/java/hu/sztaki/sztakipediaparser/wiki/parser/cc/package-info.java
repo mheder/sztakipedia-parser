@@ -21,6 +21,7 @@
  */
 
 /**
- * Provides the Parser class which is the entry point of the parser, and some utility classes.
+ * Provides the JavaCC source file JavaCCWikiParser.jj, stores the output classes of the JavaCC generated parser
+ * 
  */
-package hu.sztaki.sztakipediaparser.wiki.parser;
+package hu.sztaki.sztakipediaparser.wiki.parser.cc;

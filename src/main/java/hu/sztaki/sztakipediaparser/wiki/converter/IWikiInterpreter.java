@@ -277,6 +277,12 @@ public interface IWikiInterpreter {
 	 * Clear tag stack.
 	 */
 	public void reset();
+	
+	
+	/**
+	 * Clear tag stack, and new root item to tagtree
+	 */
+	public void reInitialize();
 
 	/**
 	 * Adds the supplied array of CSS classes to the specified class.

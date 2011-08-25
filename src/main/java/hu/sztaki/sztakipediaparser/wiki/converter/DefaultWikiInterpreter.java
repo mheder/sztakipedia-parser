@@ -85,7 +85,7 @@ public class DefaultWikiInterpreter implements IWikiInterpreter {
 	/**
 	 * Tree storing the html tags.
 	 */
-	private Tag tagtree;
+	protected Tag tagtree;
 
 	/**
 	 * The top node of the tag stack is the actual node. If adding a new node to
@@ -208,6 +208,28 @@ public class DefaultWikiInterpreter implements IWikiInterpreter {
 	 * @throws MalformedURLException
 	 * @throws NoSuchAlgorithmException
 	 */
+	public DefaultWikiInterpreter(Locale locale) throws MalformedURLException, IOException,
+			NoSuchAlgorithmException {
+		tagtree = new BodyTag();
+
+		// Set language
+		this.locale = locale;
+		DefaultLanguageHandler.setLocale(locale);
+
+		// Create digest instance
+		md = MessageDigest.getInstance("MD5");
+	}
+	/**
+	 * Constructor with user supplied locale, root, API and media URL.
+	 * 
+	 * @param locale
+	 * @param rootURL
+	 * @param apiURL
+	 * @param mediaUrl
+	 * @throws IOException
+	 * @throws MalformedURLException
+	 * @throws NoSuchAlgorithmException
+	 */
 	public DefaultWikiInterpreter(Locale locale, String rootURL, String apiURL,
 			String mediaUrl) throws MalformedURLException, IOException,
 			NoSuchAlgorithmException {
@@ -230,6 +252,7 @@ public class DefaultWikiInterpreter implements IWikiInterpreter {
 	/*** Methods ***/
 	/***************/
 
+	
 	public void addExternalLinkTag(String url, String alias, boolean plainlink,
 			String wikitext) {
 		Tag parent = peekTagStack();
@@ -690,6 +713,11 @@ public class DefaultWikiInterpreter implements IWikiInterpreter {
 
 	public void reset() {
 		tagStack.clear();
+	}
+	
+	public void reInitialize(){
+		reset();
+		tagtree = new BodyTag();
 	}
 
 	public void addCssClasses(Class<? extends Tag> C, List<String> css) {
