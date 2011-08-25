@@ -61,8 +61,8 @@ public class ImageTag extends AbstractTag {
 	private boolean resize = false;
 	private boolean upright = false;
 	private float uprightFactor = 0;
-	private int width = 0;
-	private int height = 0;
+	private long width = 0;
+	private long height = 0;
 	private boolean enableLink = true;
 	private String link = "";
 
@@ -145,21 +145,21 @@ public class ImageTag extends AbstractTag {
 		return uprightFactor;
 	}
 
-	public void setWidth(int width) {
+	public void setWidth(long width) {
 		this.width = width;
 		this.resize = true;
 	}
 
-	public int getWidth() {
+	public long getWidth() {
 		return width;
 	}
 
-	public void setHeight(int height) {
+	public void setHeight(long height) {
 		this.height = height;
 		this.resize = true;
 	}
 
-	public int getHeight() {
+	public long getHeight() {
 		return height;
 	}
 

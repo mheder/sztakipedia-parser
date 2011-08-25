@@ -83,21 +83,9 @@ public class DefaultWikiInterpreter implements IWikiInterpreter {
 	/**************/
 
 	/**
-	 * Tree storing the html tags.
+	 * Tree storing the html tags, and the tag stack.
 	 */
-	protected Tag tagtree;
-
-	/**
-	 * The top node of the tag stack is the actual node. If adding a new node to
-	 * the tree, the actual node will be its parent. If the new node is not a
-	 * terminator node, i.e. it can have children, then the actual node is
-	 * checked first. If the actual node equals the new node, then the tag stack
-	 * is reduced and no new node will be added to the tree. (A terminator node
-	 * can be an external link because it doesn't have any children in wikitext
-	 * sense. However, a pair of ''' bold nodes can have any other nodes between
-	 * them.)
-	 */
-	private Stack<Tag> tagStack = new Stack<Tag>();
+	protected TagTree tagtree;
 
 	/**
 	 * This hashmap defines an array of css classes for each tag.
@@ -193,7 +181,7 @@ public class DefaultWikiInterpreter implements IWikiInterpreter {
 	 */
 	public DefaultWikiInterpreter() throws MalformedURLException, IOException,
 			NoSuchAlgorithmException {
-		tagtree = new BodyTag();
+		tagtree = new TagTree();
 		locale = new Locale("en");
 
 		// Create digest instance
@@ -210,7 +198,7 @@ public class DefaultWikiInterpreter implements IWikiInterpreter {
 	 */
 	public DefaultWikiInterpreter(Locale locale) throws MalformedURLException, IOException,
 			NoSuchAlgorithmException {
-		tagtree = new BodyTag();
+		tagtree = new TagTree();
 
 		// Set language
 		this.locale = locale;
@@ -233,7 +221,7 @@ public class DefaultWikiInterpreter implements IWikiInterpreter {
 	public DefaultWikiInterpreter(Locale locale, String rootURL, String apiURL,
 			String mediaUrl) throws MalformedURLException, IOException,
 			NoSuchAlgorithmException {
-		tagtree = new BodyTag();
+		tagtree = new TagTree();
 
 		// Set language
 		this.locale = locale;
@@ -255,7 +243,7 @@ public class DefaultWikiInterpreter implements IWikiInterpreter {
 	
 	public void addExternalLinkTag(String url, String alias, boolean plainlink,
 			String wikitext) {
-		Tag parent = peekTagStack();
+		Tag parent = tagtree.peekTagStack();
 		AnchorTag tag = new AnchorTag(parent);
 
 		url = InterpreterUtils.trim(url);
@@ -265,11 +253,11 @@ public class DefaultWikiInterpreter implements IWikiInterpreter {
 		tag.addAttribute("href", url);
 		if (alias != null && !alias.isEmpty()) {
 			// Parse alias recursively
-			pushToStack(tag); // Push to stack, so that this node will be the
+			tagtree.pushToStack(tag); // Push to stack, so that this node will be the
 			// parent of subsequent nodes parsed
 			// recursively.
 			parseRecursively(alias);
-			reduceTagStack(); // Finished with this tag, pop it from the stack.
+			tagtree.reduceTagStack(); // Finished with this tag, pop it from the stack.
 		} else {
 			// There is no alias so use the url counter.
 			tag.addChild(new TextTag(tag, "[" + urlCounter + "]"));
@@ -302,7 +290,7 @@ public class DefaultWikiInterpreter implements IWikiInterpreter {
 			return;
 		}
 
-		Tag parent = peekTagStack();
+		Tag parent = tagtree.peekTagStack();
 		AnchorTag tag = new AnchorTag(parent);
 
 		// TODO Handle Interlanguage and InterWiki links
@@ -327,11 +315,11 @@ public class DefaultWikiInterpreter implements IWikiInterpreter {
 			}
 
 			// Parse alias recursively
-			pushToStack(tag); // Push to stack, so that this node will be the
+			tagtree.pushToStack(tag); // Push to stack, so that this node will be the
 			// parent of subsequent nodes parsed
 			// recursively.
 			parseRecursively(alias);
-			reduceTagStack(); // Finished with this tag, pop it from the stack.
+			tagtree.reduceTagStack(); // Finished with this tag, pop it from the stack.
 		} else {
 			// Use the URL as alias if none specified
 			tag.addChild(new TextTag(tag, url));
@@ -341,7 +329,7 @@ public class DefaultWikiInterpreter implements IWikiInterpreter {
 	}
 
 	public void addStringTag(String content) {
-		Tag parent = peekTagStack();
+		Tag parent = tagtree.peekTagStack();
 
 		TextTag tag = new TextTag(parent, content);
 		parent.addChild(tag);
@@ -349,7 +337,7 @@ public class DefaultWikiInterpreter implements IWikiInterpreter {
 
 	public void startBoldTag(String wikitext) {
 		// Query parent tag
-		Tag parent = peekTagStack();
+		Tag parent = tagtree.peekTagStack();
 
 		// Create tag and set properties
 		BoldTag tag = new BoldTag(parent);
@@ -359,16 +347,16 @@ public class DefaultWikiInterpreter implements IWikiInterpreter {
 		parent.addChild(tag);
 
 		// Push new tag to tag stack
-		pushToStack(tag);
+		tagtree.pushToStack(tag);
 	}
 
 	public void endBoldTag() {
-		reduceTagStack();
+		tagtree.reduceTagStack();
 	}
 
 	public void startItalicTag(String wikitext) {
 		// Query parent tag
-		Tag parent = peekTagStack();
+		Tag parent = tagtree.peekTagStack();
 
 		// Create tag and set properties
 		ItalicTag tag = new ItalicTag(parent);
@@ -378,16 +366,16 @@ public class DefaultWikiInterpreter implements IWikiInterpreter {
 		parent.addChild(tag);
 
 		// Push new tag to tag stack
-		pushToStack(tag);
+		tagtree.pushToStack(tag);
 	}
 
 	public void endItalicTag() {
-		reduceTagStack();
+		tagtree.reduceTagStack();
 	}
 
 	public void startSectionHeading(String wikitext) {
 		// Get parent tag
-		Tag parent = peekTagStack();
+		Tag parent = tagtree.peekTagStack();
 
 		// Create tag and set properties
 		HeadingTag tag = new HeadingTag(parent);
@@ -398,16 +386,16 @@ public class DefaultWikiInterpreter implements IWikiInterpreter {
 		parent.addChild(tag);
 
 		// Push to stack
-		pushToStack(tag);
+		tagtree.pushToStack(tag);
 	}
 
 	public void endSectionHeading() {
-		reduceTagStack();
+		tagtree.reduceTagStack();
 	}
 
 	public void startSubSectionHeading(String wikitext) {
 		// Get parent tag
-		Tag parent = peekTagStack();
+		Tag parent = tagtree.peekTagStack();
 
 		// Create tag and set properties
 		HeadingTag tag = new HeadingTag(parent);
@@ -418,16 +406,16 @@ public class DefaultWikiInterpreter implements IWikiInterpreter {
 		parent.addChild(tag);
 
 		// Push to stack
-		pushToStack(tag);
+		tagtree.pushToStack(tag);
 	}
 
 	public void endSubSectionHeading() {
-		reduceTagStack();
+		tagtree.reduceTagStack();
 	}
 
 	public void startSubSubSectionHeading(String wikitext) {
 		// Get parent tag
-		Tag parent = peekTagStack();
+		Tag parent = tagtree.peekTagStack();
 
 		// Create tag and set properties
 		HeadingTag tag = new HeadingTag(parent);
@@ -438,16 +426,16 @@ public class DefaultWikiInterpreter implements IWikiInterpreter {
 		parent.addChild(tag);
 
 		// Push to stack
-		pushToStack(tag);
+		tagtree.pushToStack(tag);
 	}
 
 	public void endSubSubSectionHeading() {
-		reduceTagStack();
+		tagtree.reduceTagStack();
 	}
 
 	public void addHorizontalRuler(String wikitext) {
 		// Get parent tag
-		Tag parent = peekTagStack();
+		Tag parent = tagtree.peekTagStack();
 
 		// Create HRTag and set parameters
 		HRTag tag = new HRTag(parent);
@@ -459,7 +447,7 @@ public class DefaultWikiInterpreter implements IWikiInterpreter {
 
 	public void startParagraph(String wikitext) {
 		// Get parent tag
-		Tag parent = peekTagStack();
+		Tag parent = tagtree.peekTagStack();
 
 		// Create ParagraphTag and set its properties
 		ParagraphTag tag = new ParagraphTag(parent);
@@ -469,11 +457,11 @@ public class DefaultWikiInterpreter implements IWikiInterpreter {
 		parent.addChild(tag);
 
 		// Push to tagstack
-		pushToStack(tag);
+		tagtree.pushToStack(tag);
 	}
 
 	public void endParagraph() {
-		reduceTagStack();
+		tagtree.reduceTagStack();
 	}
 
 	public void addTemplate(String str, boolean multiline) {
@@ -504,7 +492,7 @@ public class DefaultWikiInterpreter implements IWikiInterpreter {
 			String name = params[0];
 
 			int index = 1;
-			Tag parent = peekTagStack();
+			Tag parent = tagtree.peekTagStack();
 			TemplateTag tag = new TemplateTag(parent);
 			tag.addClass("wiki-template");
 			if (multiline) {
@@ -551,7 +539,7 @@ public class DefaultWikiInterpreter implements IWikiInterpreter {
 	}
 
 	public void addRawWikiTag(String wikitext) {
-		Tag parent = peekTagStack();
+		Tag parent = tagtree.peekTagStack();
 		RawWikiTag tag = new RawWikiTag(parent);
 		tag.setWikitext(wikitext);
 		parent.addChild(tag);
@@ -563,7 +551,7 @@ public class DefaultWikiInterpreter implements IWikiInterpreter {
 			w += wikitext;
 		}
 
-		Tag parent = peekTagStack();
+		Tag parent = tagtree.peekTagStack();
 		IndentTag tag = new IndentTag(parent);
 		tag.setWikitext(w);
 		tag.setLeveL(level);
@@ -571,33 +559,33 @@ public class DefaultWikiInterpreter implements IWikiInterpreter {
 	}
 
 	public void startList(boolean wrap) {
-		Tag parent = peekTagStack();
+		Tag parent = tagtree.peekTagStack();
 
 		UnorderedListTag tag = new UnorderedListTag(parent);
 		tag.setWrap(wrap);
 		parent.addChild(tag);
 
-		pushToStack(tag);
+		tagtree.pushToStack(tag);
 	}
 
 	public void endList() {
-		reduceTagStack();
+		tagtree.reduceTagStack();
 	}
 
 	public void addListItem(String str) {
-		Tag parent = peekTagStack();
+		Tag parent = tagtree.peekTagStack();
 
 		UnorderedListItemTag tag = new UnorderedListItemTag(parent);
 		parent.addChild(tag);
 
 		// Parse content recursively
-		pushToStack(tag);
+		tagtree.pushToStack(tag);
 		parseRecursively(str);
-		reduceTagStack();
+		tagtree.reduceTagStack();
 	}
 
 	public void startTable(String params, String caption) {
-		Tag parent = peekTagStack();
+		Tag parent = tagtree.peekTagStack();
 
 		TableTag tag = new TableTag(parent, params);
 		parent.addChild(tag);
@@ -605,36 +593,36 @@ public class DefaultWikiInterpreter implements IWikiInterpreter {
 		// Parse caption recursively.
 		if (caption != null && !caption.isEmpty()) {
 			TableCaptionTag captionTag = new TableCaptionTag();
-			pushToStack(captionTag);
+			tagtree.pushToStack(captionTag);
 			parseRecursively(caption);
-			reduceTagStack();
+			tagtree.reduceTagStack();
 			tag.setCaption(captionTag);
 		}
 
-		pushToStack(tag);
+		tagtree.pushToStack(tag);
 	}
 
 	public void endTable() {
-		reduceTagStack();
+		tagtree.reduceTagStack();
 	}
 
 	public void addTableColHeading(String heading, String params) {
-		Tag parent = peekTagStack();
+		Tag parent = tagtree.peekTagStack();
 
 		if (parent instanceof TableRowTag) {
 			TableColHeadingTag tag = new TableColHeadingTag(parent, params);
 			parent.addChild(tag);
 
 			if (heading != null && !heading.isEmpty()) {
-				pushToStack(tag);
+				tagtree.pushToStack(tag);
 				parseRecursively(heading);
-				reduceTagStack();
+				tagtree.reduceTagStack();
 			}
 		}
 	}
 
 	public void addTableRowHeading(String heading, String params) {
-		Tag parent = peekTagStack();
+		Tag parent = tagtree.peekTagStack();
 
 		if (parent instanceof TableRowTag) {
 			TableRowTag row = (TableRowTag) parent;
@@ -642,30 +630,30 @@ public class DefaultWikiInterpreter implements IWikiInterpreter {
 			row.addChild(tag);
 
 			if (heading != null && !heading.isEmpty()) {
-				pushToStack(tag);
+				tagtree.pushToStack(tag);
 				parseRecursively(heading);
-				reduceTagStack();
+				tagtree.reduceTagStack();
 			}
 		}
 	}
 
 	public void startTableRow(String params) {
-		Tag parent = peekTagStack();
+		Tag parent = tagtree.peekTagStack();
 
 		if (parent instanceof TableTag) {
 			TableTag table = (TableTag) parent;
 			TableRowTag tag = new TableRowTag(table, params);
 			table.addChild(tag);
-			pushToStack(tag);
+			tagtree.pushToStack(tag);
 		}
 	}
 
 	public void endTableRow() {
-		reduceTagStack();
+		tagtree.reduceTagStack();
 	}
 
 	public void addTableCell(String content, String params) {
-		Tag parent = peekTagStack();
+		Tag parent = tagtree.peekTagStack();
 
 		if (parent instanceof TableRowTag) {
 			TableRowTag row = (TableRowTag) parent;
@@ -673,23 +661,23 @@ public class DefaultWikiInterpreter implements IWikiInterpreter {
 			row.addChild(tag);
 
 			if (content != null && !content.isEmpty()) {
-				pushToStack(tag);
+				tagtree.pushToStack(tag);
 				parseRecursively(content);
-				reduceTagStack();
+				tagtree.reduceTagStack();
 			}
 		}
 	}
 
 	public void addReferenceTag(String str) {
-		Tag parent = peekTagStack();
+		Tag parent = tagtree.peekTagStack();
 		ReferenceTag tag = new ReferenceTag(parent, refID);
 		++refID;
 
 		// Parse recursively
 		if (str != null && !str.isEmpty()) {
-			pushToStack(tag);
+			tagtree.pushToStack(tag);
 			parseRecursively(str);
-			reduceTagStack();
+			tagtree.reduceTagStack();
 		}
 
 		parent.addChild(tag);
@@ -702,9 +690,9 @@ public class DefaultWikiInterpreter implements IWikiInterpreter {
 	public void render(StringBuilder b, boolean visitRoot) {
 		HTMLVisitor v = new HTMLVisitor();
 		if (visitRoot) {
-			v.dispatchVisit(tagtree);
+			v.dispatchVisit(tagtree.getTreeRoot());
 		} else {
-			for (Tag c : tagtree.getChildren()) {
+			for (Tag c : tagtree.getTreeRoot().getChildren()) {
 				v.dispatchVisit(c);
 			}
 		}
@@ -712,12 +700,11 @@ public class DefaultWikiInterpreter implements IWikiInterpreter {
 	}
 
 	public void reset() {
-		tagStack.clear();
+		tagtree.reset();
 	}
 	
 	public void reInitialize(){
-		reset();
-		tagtree = new BodyTag();
+		tagtree.reInitialize();
 	}
 
 	public void addCssClasses(Class<? extends Tag> C, List<String> css) {
@@ -759,7 +746,7 @@ public class DefaultWikiInterpreter implements IWikiInterpreter {
 		if (url.startsWith(":")) {
 			// Linking directly to the description page of the image
 			url = url.substring(1);
-			Tag parent = peekTagStack();
+			Tag parent = tagtree.peekTagStack();
 
 			// Create the link tag. Its parent is the actual node on top of the
 			// stack.
@@ -776,9 +763,9 @@ public class DefaultWikiInterpreter implements IWikiInterpreter {
 			}
 
 			// Parse the alias recursively
-			pushToStack(aTag);
+			tagtree.pushToStack(aTag);
 			parseRecursively(alias);
-			reduceTagStack(); // No other children for the aTag, pop it from the
+			tagtree.reduceTagStack(); // No other children for the aTag, pop it from the
 			// stack.
 
 			// Set properties of the link tag
@@ -805,7 +792,7 @@ public class DefaultWikiInterpreter implements IWikiInterpreter {
 					+ URLEncoder.encode(filename, "UTF-8");
 
 			// Create nodes
-			Tag parent = peekTagStack();
+			Tag parent = tagtree.peekTagStack();
 
 			ImageTag imgTag = new ImageTag(parent);
 			imgTag.setWikitext(wikitext);
@@ -873,19 +860,19 @@ public class DefaultWikiInterpreter implements IWikiInterpreter {
 					params.remove(p);
 				} else if (p.matches("^\\d+px$")) {
 					String[] s = p.split("px");
-					int width = Integer.parseInt(s[0]);
+					long width = Long.parseLong(s[0]);
 					imgTag.setWidth(width);
 					params.remove(p);
 				} else if (p.matches("^x\\d+px$")) {
 					String[] s = p.split("px");
-					int height = Integer.parseInt(s[0].substring(1));
+					long height = Long.parseLong(s[0].substring(1));
 					imgTag.setHeight(height);
 					params.remove(p);
 				} else if (p.matches("^\\d+x\\d+px$")) {
 					String[] s = p.split("px");
 					String[] s2 = s[0].split("x");
-					int width = Integer.parseInt(s2[0]);
-					int height = Integer.parseInt(s2[1]);
+					long width = Long.parseLong(s2[0]);
+					long height = Long.parseLong(s2[1]);
 					imgTag.setWidth(width);
 					imgTag.setHeight(height);
 					params.remove(p);
@@ -906,9 +893,9 @@ public class DefaultWikiInterpreter implements IWikiInterpreter {
 				imgTag.setCaption(caption);
 
 				// Parse caption recursively
-				pushToStack(imgTag);
+				tagtree.pushToStack(imgTag);
 				parseRecursively(caption);
-				reduceTagStack();
+				tagtree.reduceTagStack();
 			}
 
 			parent.addChild(imgTag);
@@ -925,43 +912,6 @@ public class DefaultWikiInterpreter implements IWikiInterpreter {
 	private void parseRecursively(String source) {
 		parser = new JavaCCWikiParser(new StringReader(source));
 		parser.parse(this);
-	}
-
-	/**
-	 * Returns the top element of the stack, or the root node of the tree if the
-	 * stack is empty.
-	 * 
-	 * @return Top element of tag stack or the root node of the tag tree.
-	 */
-	private Tag reduceTagStack() {
-		if (tagStack.isEmpty()) {
-			return tagtree;
-		}
-
-		return tagStack.pop();
-	}
-
-	/**
-	 * Returns the top element of the stack without removing it or the tree if
-	 * the stack is empty.
-	 * 
-	 * @return Top element of tag stack or the root node of the tag tree.
-	 */
-	private Tag peekTagStack() {
-		if (tagStack.isEmpty()) {
-			return tagtree;
-		}
-
-		return tagStack.peek();
-	}
-
-	/**
-	 * Pushes a new Tag to the tag stack.
-	 * 
-	 * @param tag
-	 */
-	private void pushToStack(Tag tag) {
-		tagStack.push(tag);
 	}
 
 	/**
@@ -993,7 +943,7 @@ public class DefaultWikiInterpreter implements IWikiInterpreter {
 			Tag node;
 			int lastmatch = 0;
 			List<Tag> queue = new ArrayList<Tag>();
-			queue.add(tagtree);
+			queue.add(tagtree.getTreeRoot());
 
 			while (!queue.isEmpty()) {
 				node = queue.remove(0);
