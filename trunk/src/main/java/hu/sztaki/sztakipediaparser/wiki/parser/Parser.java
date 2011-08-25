@@ -24,6 +24,7 @@ package hu.sztaki.sztakipediaparser.wiki.parser;
 import hu.sztaki.sztakipediaparser.wiki.converter.DefaultWikiInterpreter;
 import hu.sztaki.sztakipediaparser.wiki.converter.IWikiInterpreter;
 import hu.sztaki.sztakipediaparser.wiki.converter.InterpreterUtils;
+import hu.sztaki.sztakipediaparser.wiki.converter.PlainWikiInterpreter;
 import hu.sztaki.sztakipediaparser.wiki.parser.cc.JavaCCWikiParser;
 
 import java.io.File;
@@ -34,6 +35,7 @@ import java.io.StringReader;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
+import java.util.Locale;
 
 /**
  * Main class of the parser.
@@ -51,10 +53,10 @@ import java.nio.charset.Charset;
 public class Parser {
 	private String[] sections;
 	private Splitter splitter = new Splitter("\n==[=]?[=]?([^=]*)==[=]?[=]?");
-	private IWikiInterpreter c;
+	private IWikiInterpreter interpreter;
 
-	public Parser(IWikiInterpreter c) {
-		this.c = c;
+	public Parser(IWikiInterpreter interpreter) {
+		this.interpreter = interpreter;
 	}
 
 	/**
@@ -68,6 +70,68 @@ public class Parser {
 	}
 
 	/**
+	 * Process single file, which includes reading it, parsing and writing out
+	 * parsed content.
+	 * 
+	 * @param inputFileName
+	 * @param outputFileName
+	 * @throws IOException
+	 */
+	public void parseFile(String inputFileName, String outputFileName)
+			throws IOException {
+		long time = System.currentTimeMillis();
+		File inputFile = new File(inputFileName);
+		if (inputFile.isFile()) {
+			String wikitext = readFileAsString(inputFile);
+			// Logger would be better at this point
+			System.out.println("Input read in "
+					+ (System.currentTimeMillis() - time) + " ms.");
+
+			// Parse
+			time = System.currentTimeMillis();
+			String output = parse(wikitext);
+			System.out.println("Parsed in: "
+					+ (System.currentTimeMillis() - time) + " ms.");
+			writeOutput(output, outputFileName);
+		}
+	}
+
+	/**
+	 * Process input as a directory, processing each contained file separately.
+	 * 
+	 * @param inputDirName
+	 * @param outputDirName
+	 * @throws IOException
+	 */
+	public void parseDirectory(String inputDirName, String outputDirName)
+			throws IOException {
+		File inputDirectory = new File(inputDirName);
+		String[] fileList = inputDirectory.list();
+		if (fileList != null) {
+			for (int i = 0; i < fileList.length; i++) {
+				String fileName = fileList[i];
+				parseFile(inputDirName + File.separator + fileName,
+						outputDirName + File.separator + fileName);
+			}
+		}
+	}
+
+	/**
+	 * Writes the given content to the specified file.
+	 * 
+	 * @param content
+	 * @param outputFileName
+	 * @throws IOException 
+	 */
+	public void writeOutput(String content, String outputFileName)
+			throws IOException {
+		FileWriter writer = new FileWriter(outputFileName);
+		writer.write(content);
+		writer.flush();
+		writer.close();
+	}
+
+	/**
 	 * Parse the given wikitext and return the html output in a string. Parsing
 	 * is done separately for each section.
 	 * 
@@ -75,14 +139,16 @@ public class Parser {
 	 * @return Html output of the parser.
 	 */
 	public String parse(String wikitext) {
-		wikitext = c.preprocess(wikitext);
+		
+		interpreter.reInitialize();
+		wikitext = interpreter.preprocess(wikitext);
 
 		breakToSections(wikitext);
 
 		// Parse each section with JavaCCWikiParser
 		for (int i = 0; i < sections.length; i++) {
 			if (!sections[i].isEmpty()) {
-				c.reset();
+				interpreter.reset();
 				// Replace lost newlines
 				if (sections[i].matches("(?s)==[=]?[=]?([^=]*)==[=]?[=]?.*")) {
 					sections[i] = "\n" + sections[i];
@@ -94,49 +160,84 @@ public class Parser {
 
 				JavaCCWikiParser p = new JavaCCWikiParser(new StringReader(
 						sections[i]));
-				p.parse(c);
+				p.parse(interpreter);
 			}
 		}
 
 		StringBuilder b = new StringBuilder();
-		c.postprocess(wikitext);
-		c.render(b);
+		interpreter.postprocess(wikitext);
+		interpreter.render(b);
 
 		return InterpreterUtils.trim(b.toString());
 	}
 
+	public static void printUsage() {
+		System.out
+				.println("Usage: java -jar SZPParser.jar inFile|inDir outfile|outDir locale [html|plain] \n if third parameter omitted, default is html" +
+						"\n locales currently supported: en, hu");
+	}
+
 	public static void main(String[] args) throws Exception {
-		if (args.length != 2) {
-			System.out.println("Usage: java -jar SZPParser.jar infile outfile");
+		if (args.length < 3) {
+			printUsage();
 			System.exit(0);
 		}
 
-		File infile = new File(args[0]);
-		String outfile = args[1];
+		String inputFileName = args[0];
+		File infile = new File(inputFileName);
+		String outputFileName = args[1];
+		File outfile = new File(outputFileName);
+		boolean isIODirectory = infile.isDirectory();
+		if ((infile.isDirectory() && outfile.isFile())
+				|| (infile.isFile() && outfile.isDirectory())) {
+			printUsage();
+			System.out
+					.println("Input and output must be the same type: both files, or directories!");
+		}
 
-		// Read input
-		long time = System.currentTimeMillis();
-		String wikitext = readFileAsString(infile);
-		System.out.println("Input read in "
-				+ (System.currentTimeMillis() - time) + " ms.");
+		String locale = args[2];
+		
+		String interpreter = "default";
+		if (args.length > 3) {
+			interpreter = args[3];
+		}
 
 		// Create interpreter
-		IWikiInterpreter c = new DefaultWikiInterpreter();
+		IWikiInterpreter c;
+		if ("html".startsWith(interpreter)) {
+			c = new DefaultWikiInterpreter(new Locale(locale));
+		} else if ("plain".startsWith(interpreter)) {
+			c = new PlainWikiInterpreter(new Locale(locale));
+		} else {
+			c = new DefaultWikiInterpreter(new Locale(locale));
+		}
+		// IWikiInterpreter c = new DefaultWikiInterpreter();
 
 		// Create parser
 		Parser p = new Parser(c);
-
-		// Parse
-		time = System.currentTimeMillis();
-		String html = p.parse(wikitext);
-		System.out.println("Parsed in: " + (System.currentTimeMillis() - time)
-				+ " ms.");
-
-		// Write output
-		FileWriter writer = new FileWriter(outfile);
-		writer.write(html);
-		writer.flush();
-		writer.close();
+		// process input
+		if (isIODirectory) {
+			p.parseDirectory(inputFileName, outputFileName);
+		} else {
+			p.parseFile(inputFileName, outputFileName);
+		}
+		// long time = System.currentTimeMillis();
+		// String wikitext = readFileAsString(infile);
+		// System.out.println("Input read in "
+		// + (System.currentTimeMillis() - time) + " ms.");
+		//
+		// // Parse
+		// time = System.currentTimeMillis();
+		// String html = p.parse(wikitext);
+		// System.out.println("Parsed in: " + (System.currentTimeMillis() -
+		// time)
+		// + " ms.");
+		//
+		// // Write output
+		// FileWriter writer = new FileWriter(outfile);
+		// writer.write(html);
+		// writer.flush();
+		// writer.close();
 	}
 
 	/**
@@ -146,7 +247,7 @@ public class Parser {
 	 * @author Illes Solt
 	 * @throws IOException
 	 */
-	public static String readFileAsString(File file) throws IOException {
+	public String readFileAsString(File file) throws IOException {
 		return readFileAsString(file, Charset.defaultCharset());
 	}
 
@@ -158,7 +259,7 @@ public class Parser {
 	 * @author Illes Solt
 	 * @throws IOException
 	 */
-	public static String readFileAsString(File file, Charset charset)
+	public String readFileAsString(File file, Charset charset)
 			throws IOException {
 		final byte[] contents = readFileAsBytes(file);
 
@@ -173,7 +274,7 @@ public class Parser {
 	 * @author Illes Solt
 	 * @throws IOException
 	 */
-	protected static byte[] readFileAsBytes(File file) throws IOException {
+	protected byte[] readFileAsBytes(File file) throws IOException {
 		final byte[] contents;
 
 		FileInputStream fis = null;

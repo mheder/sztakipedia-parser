@@ -87,6 +87,7 @@ public class DefaultLanguageHandler {
 	public static void setLocale(Locale l) {
 		if (l != null) {
 			locale = (Locale) l.clone();
+			bundle = ResourceBundle.getBundle(baseName, locale);
 		}
 	}
 
