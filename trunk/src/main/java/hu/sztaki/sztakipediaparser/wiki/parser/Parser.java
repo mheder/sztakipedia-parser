@@ -55,6 +55,12 @@ public class Parser {
 	private Splitter splitter = new Splitter("\n==[=]?[=]?([^=]*)==[=]?[=]?");
 	private IWikiInterpreter interpreter;
 
+	private boolean rewriteExistingFile = true;
+
+	public void setRewriteExistingFile(boolean rewriteExistingFile) {
+		this.rewriteExistingFile = rewriteExistingFile;
+	}
+
 	public Parser(IWikiInterpreter interpreter) {
 		this.interpreter = interpreter;
 	}
@@ -79,20 +85,28 @@ public class Parser {
 	 */
 	public void parseFile(String inputFileName, String outputFileName)
 			throws IOException {
-		long time = System.currentTimeMillis();
+
+		// long time = System.currentTimeMillis();
 		File inputFile = new File(inputFileName);
 		if (inputFile.isFile()) {
-			String wikitext = readFileAsString(inputFile);
-			// Logger would be better at this point
-			System.out.println("Input read in "
-					+ (System.currentTimeMillis() - time) + " ms.");
+			File outputFile = new File(outputFileName);
+			if ((!outputFile.exists())
+					|| (outputFile.exists() && rewriteExistingFile == true)) {
 
-			// Parse
-			time = System.currentTimeMillis();
-			String output = parse(wikitext);
-			System.out.println("Parsed in: "
-					+ (System.currentTimeMillis() - time) + " ms.");
-			writeOutput(output, outputFileName);
+				System.out.print(inputFileName);
+				String wikitext = readFileAsString(inputFile);
+				// Logger would be better at this point
+				// System.out.println("Input read in "
+				// + (System.currentTimeMillis() - time) + " ms.");
+
+				// Parse
+				// time = System.currentTimeMillis();
+				String output = parse(wikitext);
+				// System.out.println("Parsed in: "
+				// + (System.currentTimeMillis() - time) + " ms.");
+				writeOutput(output, outputFileName);
+				System.out.println(" ... OK");
+			}
 		}
 	}
 
@@ -121,7 +135,7 @@ public class Parser {
 	 * 
 	 * @param content
 	 * @param outputFileName
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public void writeOutput(String content, String outputFileName)
 			throws IOException {
@@ -139,7 +153,7 @@ public class Parser {
 	 * @return Html output of the parser.
 	 */
 	public String parse(String wikitext) {
-		
+
 		interpreter.reInitialize();
 		wikitext = interpreter.preprocess(wikitext);
 
@@ -173,8 +187,10 @@ public class Parser {
 
 	public static void printUsage() {
 		System.out
-				.println("Usage: java -jar SZPParser.jar inFile|inDir outfile|outDir locale [html|plain] \n if third parameter omitted, default is html" +
-						"\n locales currently supported: en, hu");
+				.println("Usage: java -jar SZPParser.jar inFile|inDir outfile|outDir locale [html|plain] [true|false] " +
+						"\n if third parameter omitted, default is html" +
+						"\n 5th parameter specifies that existing files could be overwritten, or skipped"
+						+ "\n locales currently supported: en, hu");
 	}
 
 	public static void main(String[] args) throws Exception {
@@ -196,25 +212,35 @@ public class Parser {
 		}
 
 		String locale = args[2];
-		
-		String interpreter = "default";
+
+		String renderer = "default";
 		if (args.length > 3) {
-			interpreter = args[3];
+			renderer = args[3];
+		}
+		String rewrite = "";
+		if (args.length > 4) {
+			rewrite = args[4];
 		}
 
 		// Create interpreter
-		IWikiInterpreter c;
-		if ("html".startsWith(interpreter)) {
-			c = new DefaultWikiInterpreter(new Locale(locale));
-		} else if ("plain".startsWith(interpreter)) {
-			c = new PlainWikiInterpreter(new Locale(locale));
+		IWikiInterpreter wikiInterpreter;
+		if ("html".startsWith(renderer)) {
+			wikiInterpreter = new DefaultWikiInterpreter(new Locale(locale));
+		} else if ("plain".startsWith(renderer)) {
+			wikiInterpreter = new PlainWikiInterpreter(new Locale(locale));
 		} else {
-			c = new DefaultWikiInterpreter(new Locale(locale));
+			wikiInterpreter = new DefaultWikiInterpreter(new Locale(locale));
 		}
 		// IWikiInterpreter c = new DefaultWikiInterpreter();
 
 		// Create parser
-		Parser p = new Parser(c);
+		Parser p = new Parser(wikiInterpreter);
+		
+		//set rewrite files
+		if("true".startsWith(rewrite)){
+			p.setRewriteExistingFile(true);
+		}
+		
 		// process input
 		if (isIODirectory) {
 			p.parseDirectory(inputFileName, outputFileName);

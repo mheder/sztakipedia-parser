@@ -30,9 +30,9 @@ public class PlainWikiInterpreter extends DefaultWikiInterpreter {
 	public void render(StringBuilder b, boolean visitRoot) {
 		PlainTextContentWriter v = new PlainTextContentWriter();
 		if (visitRoot) {
-			v.dispatchVisit(tagtree);
+			v.dispatchVisit(tagtree.getTreeRoot());
 		} else {
-			for (Tag c : tagtree.getChildren()) {
+			for (Tag c : tagtree.getTreeRoot().getChildren()) {
 				v.dispatchVisit(c);
 			}
 		}
