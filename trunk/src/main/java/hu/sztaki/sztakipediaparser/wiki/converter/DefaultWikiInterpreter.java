@@ -26,7 +26,6 @@ import hu.sztaki.sztakipediaparser.wiki.parser.IWikiParser;
 import hu.sztaki.sztakipediaparser.wiki.parser.Splitter;
 import hu.sztaki.sztakipediaparser.wiki.parser.cc.JavaCCWikiParser;
 import hu.sztaki.sztakipediaparser.wiki.tags.AnchorTag;
-import hu.sztaki.sztakipediaparser.wiki.tags.BodyTag;
 import hu.sztaki.sztakipediaparser.wiki.tags.BoldTag;
 import hu.sztaki.sztakipediaparser.wiki.tags.HRTag;
 import hu.sztaki.sztakipediaparser.wiki.tags.HeadingTag;
@@ -61,7 +60,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Stack;
 
 /**
  * Converter class.
