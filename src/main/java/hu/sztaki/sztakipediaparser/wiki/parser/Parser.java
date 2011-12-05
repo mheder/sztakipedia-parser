@@ -329,4 +329,12 @@ public class Parser {
 
 		return contents;
 	}
+	
+	public void setInterpreter(IWikiInterpreter interpreter) {
+		this.interpreter = interpreter;
+	}
+
+	public IWikiInterpreter getInterpreter() {
+		return interpreter;
+	}
 }
