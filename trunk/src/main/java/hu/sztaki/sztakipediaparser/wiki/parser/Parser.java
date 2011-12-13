@@ -55,7 +55,7 @@ public class Parser {
 	private Splitter splitter = new Splitter("\n==[=]?[=]?([^=]*)==[=]?[=]?");
 	private IWikiInterpreter interpreter;
 
-	private boolean rewriteExistingFile = true;
+	private boolean rewriteExistingFile = false;
 
 	public void setRewriteExistingFile(boolean rewriteExistingFile) {
 		this.rewriteExistingFile = rewriteExistingFile;
