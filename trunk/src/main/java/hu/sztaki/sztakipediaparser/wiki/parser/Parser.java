@@ -154,6 +154,7 @@ public class Parser {
 	 */
 	public String parse(String wikitext) {
 
+		StringBuilder b = new StringBuilder();
 		interpreter.reInitialize();
 		wikitext = interpreter.preprocess(wikitext);
 
@@ -175,12 +176,10 @@ public class Parser {
 				JavaCCWikiParser p = new JavaCCWikiParser(new StringReader(
 						sections[i]));
 				p.parse(interpreter);
+				interpreter.postprocess(wikitext);
+				interpreter.render(b);
 			}
 		}
-
-		StringBuilder b = new StringBuilder();
-		interpreter.postprocess(wikitext);
-		interpreter.render(b);
 
 		return InterpreterUtils.trim(b.toString());
 	}
