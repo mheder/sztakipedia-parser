@@ -267,10 +267,9 @@ public interface IWikiInterpreter {
 	 * Render the conversion output to the supplied StringBuilder.
 	 * 
 	 * @param b
-	 * @deprecated TODO Move rendering code to separate class according to
-	 *             <em>Visitor</em> pattern
+	 * 
 	 */
-	@Deprecated
+	
 	public void render(StringBuilder b);
 
 	/**

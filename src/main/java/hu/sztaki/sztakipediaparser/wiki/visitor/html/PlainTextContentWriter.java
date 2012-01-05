@@ -40,7 +40,7 @@ import hu.sztaki.sztakipediaparser.wiki.visitor.TagVisitor;
  */
 public class PlainTextContentWriter implements TagVisitor {
 
-	final StringBuilder out;
+	protected StringBuilder out;
 
 	public PlainTextContentWriter() {
 		out = new StringBuilder();
@@ -66,7 +66,7 @@ public class PlainTextContentWriter implements TagVisitor {
 
 	}
 
-	private void visitChildren(Tag tag) {
+	protected void visitChildren(Tag tag) {
 		if (tag.getChildren() != null)
 			for (Tag t : tag.getChildren())
 				dispatchVisit(t);
