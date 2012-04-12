@@ -205,6 +205,7 @@ public class DefaultWikiInterpreter implements IWikiInterpreter {
 		// Create digest instance
 		md = MessageDigest.getInstance("MD5");
 	}
+
 	/**
 	 * Constructor with user supplied locale, root, API and media URL.
 	 * 
@@ -216,9 +217,8 @@ public class DefaultWikiInterpreter implements IWikiInterpreter {
 	 * @throws MalformedURLException
 	 * @throws NoSuchAlgorithmException
 	 */
-	public DefaultWikiInterpreter(Locale locale, String rootURL, String apiURL,
-			String mediaUrl) throws MalformedURLException, IOException,
-			NoSuchAlgorithmException {
+	public DefaultWikiInterpreter(Locale locale, String rootURL, String apiURL, String mediaUrl)
+			throws MalformedURLException, IOException, NoSuchAlgorithmException {
 		tagtree = new TagTree();
 
 		// Set language
@@ -238,9 +238,7 @@ public class DefaultWikiInterpreter implements IWikiInterpreter {
 	/*** Methods ***/
 	/***************/
 
-	
-	public void addExternalLinkTag(String url, String alias, boolean plainlink,
-			String wikitext) {
+	public void addExternalLinkTag(String url, String alias, boolean plainlink, String wikitext) {
 		Tag parent = tagtree.peekTagStack();
 		AnchorTag tag = new AnchorTag(parent);
 
@@ -251,11 +249,13 @@ public class DefaultWikiInterpreter implements IWikiInterpreter {
 		tag.addAttribute("href", url);
 		if (alias != null && !alias.isEmpty()) {
 			// Parse alias recursively
-			tagtree.pushToStack(tag); // Push to stack, so that this node will be the
+			tagtree.pushToStack(tag); // Push to stack, so that this node will
+										// be the
 			// parent of subsequent nodes parsed
 			// recursively.
 			parseRecursively(alias);
-			tagtree.reduceTagStack(); // Finished with this tag, pop it from the stack.
+			tagtree.reduceTagStack(); // Finished with this tag, pop it from the
+										// stack.
 		} else {
 			// There is no alias so use the url counter.
 			tag.addChild(new TextTag(tag, "[" + urlCounter + "]"));
@@ -266,24 +266,18 @@ public class DefaultWikiInterpreter implements IWikiInterpreter {
 		parent.addChild(tag);
 	}
 
-	public void addInternalLinkTag(String url, List<String> params,
-			String wikitext) {
+	public void addInternalLinkTag(String url, List<String> params, String wikitext) {
 		// Handle File and Image links
-		if (url.startsWith(DefaultLanguageHandler
-				.getWord(DefaultLanguageHandler.WIKI_LINK_FILE)
+		if (url.startsWith(DefaultLanguageHandler.getWord(DefaultLanguageHandler.WIKI_LINK_FILE)
 				+ ":")
 				|| url.startsWith(DefaultLanguageHandler
-						.getWord(DefaultLanguageHandler.WIKI_LINK_IMAGE)
+						.getWord(DefaultLanguageHandler.WIKI_LINK_IMAGE) + ":")
+				|| url.startsWith(":"
+						+ DefaultLanguageHandler.getWord(DefaultLanguageHandler.WIKI_LINK_FILE)
 						+ ":")
 				|| url.startsWith(":"
-						+ DefaultLanguageHandler
-								.getWord(DefaultLanguageHandler.WIKI_LINK_FILE)
-						+ ":")
-				|| url
-						.startsWith(":"
-								+ DefaultLanguageHandler
-										.getWord(DefaultLanguageHandler.WIKI_LINK_IMAGE)
-								+ ":")) {
+						+ DefaultLanguageHandler.getWord(DefaultLanguageHandler.WIKI_LINK_IMAGE)
+						+ ":")) {
 			addImageTag(url, params, wikitext);
 			return;
 		}
@@ -313,11 +307,13 @@ public class DefaultWikiInterpreter implements IWikiInterpreter {
 			}
 
 			// Parse alias recursively
-			tagtree.pushToStack(tag); // Push to stack, so that this node will be the
+			tagtree.pushToStack(tag); // Push to stack, so that this node will
+										// be the
 			// parent of subsequent nodes parsed
 			// recursively.
 			parseRecursively(alias);
-			tagtree.reduceTagStack(); // Finished with this tag, pop it from the stack.
+			tagtree.reduceTagStack(); // Finished with this tag, pop it from the
+										// stack.
 		} else {
 			// Use the URL as alias if none specified
 			tag.addChild(new TextTag(tag, url));
@@ -465,8 +461,7 @@ public class DefaultWikiInterpreter implements IWikiInterpreter {
 	public void addTemplate(String str, boolean multiline) {
 		// Parse template string recursively with a new converter
 		try {
-			DefaultWikiInterpreter c = new DefaultWikiInterpreter(locale,
-					rootURL, apiURL, mediaUrl);
+			DefaultWikiInterpreter c = new DefaultWikiInterpreter(locale, rootURL, apiURL, mediaUrl);
 			c.setUrlCounter(urlCounter);
 			c.setTemplateID(templateID);
 			for (Class<? extends Tag> key : cssClasses.keySet()) {
@@ -509,23 +504,18 @@ public class DefaultWikiInterpreter implements IWikiInterpreter {
 
 				if (nameValuePair.length == 1) {
 					// Unnamed parameter
-					tag.addParameter(String.valueOf(index), nameValuePair[0],
-							true);
+					tag.addParameter(String.valueOf(index), nameValuePair[0], true);
 					++index;
 				} else {
 					// Named parameter or the = sign marks an html parameter
 					// such as <a href=...
-					if (nameValuePair[0].lastIndexOf(">") < nameValuePair[0]
-							.lastIndexOf("<")) {
+					if (nameValuePair[0].lastIndexOf(">") < nameValuePair[0].lastIndexOf("<")) {
 						// bogus = sign, add an unnamed parameter
-						tag
-								.addParameter(String.valueOf(index),
-										nameValuePair[0] + "="
-												+ nameValuePair[1], true);
+						tag.addParameter(String.valueOf(index), nameValuePair[0] + "="
+								+ nameValuePair[1], true);
 						++index;
 					} else {
-						tag.addParameter(nameValuePair[0], nameValuePair[1],
-								false);
+						tag.addParameter(nameValuePair[0], nameValuePair[1], false);
 					}
 				}
 			}
@@ -698,10 +688,10 @@ public class DefaultWikiInterpreter implements IWikiInterpreter {
 	}
 
 	public void reset() {
-		tagtree.reset();
+		tagtree = new TagTree();
 	}
-	
-	public void reInitialize(){
+
+	public void reInitialize() {
 		tagtree.reInitialize();
 	}
 
@@ -763,7 +753,8 @@ public class DefaultWikiInterpreter implements IWikiInterpreter {
 			// Parse the alias recursively
 			tagtree.pushToStack(aTag);
 			parseRecursively(alias);
-			tagtree.reduceTagStack(); // No other children for the aTag, pop it from the
+			tagtree.reduceTagStack(); // No other children for the aTag, pop it
+										// from the
 			// stack.
 
 			// Set properties of the link tag
@@ -780,13 +771,11 @@ public class DefaultWikiInterpreter implements IWikiInterpreter {
 
 		// Calculate real url of the image according to this:
 		// https://secure.wikimedia.org/wikipedia/commons/wiki/FAQ#What_are_the_strangely_named_components_in_file_paths.3F
-		String filename = url.substring(url.indexOf(":") + 1).replaceAll(" ",
-				"_");
+		String filename = url.substring(url.indexOf(":") + 1).replaceAll(" ", "_");
 		try {
 			md.update(filename.getBytes("UTF-8"));
 			String digest = InterpreterUtils.byteArray2Hex(md.digest());
-			realUrl = mediaUrl + digest.charAt(0) + "/" + digest.charAt(0)
-					+ digest.charAt(1) + "/"
+			realUrl = mediaUrl + digest.charAt(0) + "/" + digest.charAt(0) + digest.charAt(1) + "/"
 					+ URLEncoder.encode(filename, "UTF-8");
 
 			// Create nodes

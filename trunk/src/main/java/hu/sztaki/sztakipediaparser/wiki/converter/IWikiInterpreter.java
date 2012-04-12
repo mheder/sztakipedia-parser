@@ -53,8 +53,7 @@ public interface IWikiInterpreter {
 	 * @param wikitext
 	 *            Original raw wikitext of the tag.
 	 */
-	public void addExternalLinkTag(String url, String alias, boolean plainlink,
-			String wikitext);
+	public void addExternalLinkTag(String url, String alias, boolean plainlink, String wikitext);
 
 	/**
 	 * Appends an internal wiki link to the output buffer. e.g. [[Texas|Lone
@@ -71,8 +70,7 @@ public interface IWikiInterpreter {
 	 * @param wikitext
 	 *            The raw wikitext.
 	 */
-	public void addInternalLinkTag(String url, List<String> params,
-			String wikitext);
+	public void addInternalLinkTag(String url, List<String> params, String wikitext);
 
 	/**
 	 * Adds a new StringTag to the tree.
@@ -269,15 +267,23 @@ public interface IWikiInterpreter {
 	 * @param b
 	 * 
 	 */
-	
+
 	public void render(StringBuilder b);
+
+	/**
+	 * Render the conversion output to the supplied StringBuilder.
+	 * 
+	 * @param b
+	 * 
+	 */
+
+	public void render(StringBuilder b, boolean visitRoot);
 
 	/**
 	 * Clear tag stack.
 	 */
 	public void reset();
-	
-	
+
 	/**
 	 * Clear tag stack, and new root item to tagtree
 	 */
