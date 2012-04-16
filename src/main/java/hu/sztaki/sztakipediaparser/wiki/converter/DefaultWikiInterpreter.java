@@ -842,7 +842,13 @@ public class DefaultWikiInterpreter implements IWikiInterpreter {
 					params.remove(p);
 				} else if (p.matches("^upright=\\d+(.\\d+)?$")) {
 					String[] s = p.split("=");
-					float factor = Float.parseFloat(s[1]);
+					float factor = 1.0f;
+					try {
+						factor = Float.parseFloat(s[1]);
+					} catch (NumberFormatException e) {
+						System.out.println("Invalid float number " + s[1]
+								+ " in addImageTag() factor.");
+					}
 					imgTag.setUprightFactor(factor);
 					params.remove(p);
 				} else if (p.matches("^\\d+px$")) {
