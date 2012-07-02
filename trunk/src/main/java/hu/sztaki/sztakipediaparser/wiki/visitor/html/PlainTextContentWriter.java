@@ -46,6 +46,10 @@ public class PlainTextContentWriter implements TagVisitor {
 		out = new StringBuilder();
 	}
 
+	public PlainTextContentWriter(StringBuilder out) {
+		this.out = out;
+	}
+
 	/**
 	 * 
 	 * @return the string representing the articles text
