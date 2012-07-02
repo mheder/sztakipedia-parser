@@ -23,7 +23,6 @@ package hu.sztaki.sztakipediaparser.wiki.parser;
 
 import hu.sztaki.sztakipediaparser.wiki.converter.DefaultWikiInterpreter;
 import hu.sztaki.sztakipediaparser.wiki.converter.IWikiInterpreter;
-import hu.sztaki.sztakipediaparser.wiki.converter.InterpreterUtils;
 import hu.sztaki.sztakipediaparser.wiki.converter.PlainWikiInterpreter;
 import hu.sztaki.sztakipediaparser.wiki.parser.cc.JavaCCWikiParser;
 
@@ -176,7 +175,8 @@ public class Parser {
 			}
 		}
 
-		return InterpreterUtils.trim(b.toString());
+		// return InterpreterUtils.trim(b.toString());
+		return b.toString();
 	}
 
 	public static void printUsage() {
